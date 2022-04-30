@@ -1,6 +1,6 @@
-/// <reference path='three.js' />
-
-const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh } = require("./three");
+const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh } = require("three");
+const THREE = require("three");
+const { GLTFLoader } = require("three/examples/js/loaders/GLTFLoader.js")
 
 window.addEventListener("load", init);
 
@@ -16,7 +16,19 @@ function init() {
 	const material = new MeshNormalMaterial();
 
 	const mesh = new Mesh(geometry, material);
-	scene.add(mesh);
+	//scene.add(mesh);
+
+	const loader = new GLTFLoader();
+
+loader.load( 'BaseTower.glb', function ( gltf ) {
+
+	scene.add( gltf.scene );
+
+}, undefined, function ( error ) {
+
+	console.error( error );
+
+} );
 
 	const renderer = new WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);

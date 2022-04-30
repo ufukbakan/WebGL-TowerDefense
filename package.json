@@ -15,6 +15,7 @@
   "dependencies": {
     "browserify": "^17.0.0",
     "express": "^4.15.3",
-    "require": "^2.4.20"
+    "require": "^2.4.20",
+    "three-loaders": "^1.0.9"
   }
 }
