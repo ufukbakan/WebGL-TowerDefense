@@ -1,41 +1,29 @@
-const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh } = require("three");
+const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh, Vector3, PointLight, Color } = require("three");
 const setCameraEventListener = require("./camera_control");
-const { GLTFLoader } = require("./GLTFLoader");
+const placeModel = require("./load_scene");
 
 window.addEventListener("load", init);
 
 
 function init() {
 	console.log("hello world");
-	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-	camera.position.z = 1;
-
-	setCameraEventListener.bind(null, camera)();
+	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
+	camera.position.z = 50;
 
 	const scene = new Scene();
+	scene.background = new Color("#ffffff");
 
 	const geometry = new BoxGeometry(0.2, 0.2, 0.2);
 	const material = new MeshNormalMaterial();
 	
-	const myloader = new GLTFLoader();
-	myloader.load("\\src\\BaseTower.gltf", function(gltf){
-		scene.add(gltf);
-	});
-
 	const mesh = new Mesh(geometry, material);
-	scene.add(mesh);
+	// scene.add(mesh);
+	
+	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,10,0], [15,0,0])();
 
-	// const loader = new GLTFLoader();
-
-	// loader.load('BaseTower.glb', function (gltf) {
-
-	// 	scene.add(gltf.scene);
-
-	// }, undefined, function (error) {
-
-	// 	console.error(error);
-
-	// });
+	var light = new PointLight("#fff");
+	light.position.y = 100;
+	scene.add(light);
 
 	const renderer = new WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
