@@ -4,7 +4,7 @@
   "description": "",
   "main": "scripts.js",
   "scripts": {
-    "start": "browserify public\\src\\main.js > public\\out\\main.js && node index.js"
+    "start": "start /b browserify public\\src\\main.js -o public\\out\\main.js -p browserify-hmr && node index.js"
   },
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "browserify": "^17.0.0",
+    "browserify-hmr": "^0.4.1",
     "express": "^4.15.3",
     "require": "^0.4.4",
     "three": "^0.140.0"

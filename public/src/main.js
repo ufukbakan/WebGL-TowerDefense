@@ -1,4 +1,5 @@
 const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh } = require("three");
+const setCameraEventListener = require("./camera_control");
 const { GLTFLoader } = require("./GLTFLoader");
 
 window.addEventListener("load", init);
@@ -9,6 +10,7 @@ function init() {
 	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
 	camera.position.z = 1;
 
+	setCameraEventListener.bind(null, camera)();
 
 	const scene = new Scene();
 
@@ -44,7 +46,7 @@ function init() {
 
 	function animation(time) {
 
-		mesh.rotation.x = time / 2000;
+		//mesh.rotation.x = time / 2000;
 		mesh.rotation.y = time / 1000;
 
 		renderer.render(scene, camera);
