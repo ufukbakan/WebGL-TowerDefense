@@ -2,9 +2,9 @@
   "name": "three-js-boilerplate",
   "version": "1.0.0",
   "description": "",
-  "main": "scripts.js",
+  "main": "index.js",
   "scripts": {
-    "start": "start /b browserify public\\src\\main.js -o public\\out\\main.js -p browserify-hmr && node index.js"
+    "start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p browserify-hmr && node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
     "browserify-hmr": "^0.4.1",
     "express": "^4.15.3",
     "require": "^0.4.4",
-    "three": "^0.140.0"
+    "three": "^0.140.0",
+    "watchify": "^4.0.0"
   }
 }
