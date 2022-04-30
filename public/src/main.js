@@ -1,11 +1,12 @@
 /// <reference path='three.js' />
 
-const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer } = require("./three");
+const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh } = require("./three");
 
 window.addEventListener("load", init);
 
 
 function init() {
+	console.log("hello world");
 	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
 	camera.position.z = 1;
 
@@ -14,7 +15,7 @@ function init() {
 	const geometry = new BoxGeometry(0.2, 0.2, 0.2);
 	const material = new MeshNormalMaterial();
 
-	const mesh = new THREE.Mesh(geometry, material);
+	const mesh = new Mesh(geometry, material);
 	scene.add(mesh);
 
 	const renderer = new WebGLRenderer({ antialias: true });
