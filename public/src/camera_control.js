@@ -1,38 +1,61 @@
 function setCameraEventListener(camera) {
     var pushedButtons = [];
+    const ONE_DEGREE = Math.PI / 180;
+    const CAMERA_STEP = 0.01;
 
     window.addEventListener("keydown", keyPush);
     window.addEventListener("keyup", keyPop);
     
     function keyPush(e) {
         const key = e.key;
-        pushedButtons.push(key);
+        if(!pushedButtons.includes(key))
+            pushedButtons.push(key);
 
         if( pushedButtons.includes("Shift") ){
-            if(key == "ArrowUp"){
-                camera.position.z += 0.1;
+            if(pushedButtons.includes( "ArrowUp")){
+                camera.position.z -= CAMERA_STEP;
             }
-            else if(key == "ArrowDown"){
-                camera.position.z -= 0.1;
+            if(pushedButtons.includes( "ArrowDown")){
+                camera.position.z += CAMERA_STEP;
             }
         }
         else{
-            if(key == "ArrowLeft"){
-                camera.position.x -= 0.1;                
+            if(pushedButtons.includes( "ArrowLeft")){
+                camera.position.x -= CAMERA_STEP;                
             }
-            else if(key == "ArrowRight"){
-                camera.position.x += 0.1;
+            if(pushedButtons.includes( "ArrowRight")){
+                camera.position.x += CAMERA_STEP;
             }
-            else if(key == "ArrowUp"){
-                camera.position.y += 0.1;
+            if(pushedButtons.includes( "ArrowUp")){
+                camera.position.y += CAMERA_STEP;
             }
-            else if(key == "ArrowDown"){
-                camera.position.y -= 0.1;
+            if(pushedButtons.includes( "ArrowDown")){
+                camera.position.y -= CAMERA_STEP;
+            }
+            if(pushedButtons.includes( "4" ) ){
+                camera.rotateY(ONE_DEGREE);
+            }
+            if(pushedButtons.includes( "6" )){
+                camera.rotateY(ONE_DEGREE*-1);
+            }
+            if(pushedButtons.includes( "5" ) ){
+                camera.rotateX(ONE_DEGREE*-1);
+            }
+            if(pushedButtons.includes( "8" )){
+                camera.rotateX(ONE_DEGREE);
+            }
+            if(pushedButtons.includes( "1" ) ){
+                camera.rotateZ(ONE_DEGREE*-1);
+            }
+            if(pushedButtons.includes( "9" )){
+                camera.rotateZ(ONE_DEGREE);
             }
         }
     }
     function keyPop(e){
-        pushedButtons.splice( pushedButtons.indexOf(e.key), 1);
+        while(pushedButtons.includes(e.key)){
+            pushedButtons.splice( pushedButtons.indexOf(e.key), 1);
+        }
     }
 }
 
