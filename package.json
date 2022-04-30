@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p [browserify-livereload --host 127.0.0.1 --port 8080] && node index.js"
+    "start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p [browserify-livereload --host 127.0.0.1 --port 8080] && node index.js",
+    "_start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p browserify-hmr && node index.js"
   },
   "repository": {
     "type": "git",
