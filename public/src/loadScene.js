@@ -15,17 +15,18 @@ async function loadScene(scene){
 	const textureLoader = new TextureLoader();
 
 	let groundTexture = textureLoader.load("/src/Assets/grass4.jpg")
+	groundTexture.repeat.set(5,5);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;
 
-    const ground = new Mesh(new PlaneGeometry( 5, 5 ), new MeshLambertMaterial( { map: groundTexture } ));
-	ground.setRotationFromAxisAngle(new Vector3(1,0,0), -Math.PI/2);
+    const ground = new Mesh(new PlaneGeometry( 8, 8 ), new MeshLambertMaterial( { map: groundTexture } ));
+	ground.setRotationFromAxisAngle(new Vector3(1,0,0), Math.PI/-2);
 	scene.add( ground );
 
 	spawnEnemies(scene, 0, 0);
 	
-	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0,0,objectZ]);
-	base.scale.set(0.001,0.001,0.001);
+	//const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [2, 0, 2]);
+	//base.scale.set(0.01,0.01,0.01);
 }
 
 module.exports = loadScene;
