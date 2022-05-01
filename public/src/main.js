@@ -7,7 +7,7 @@ window.addEventListener("load", init);
 
 async function init() {
 	console.log("hello world");
-	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
+	const camera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 100);
 	camera.position.z = 50;
 
 	setCameraEventListener(camera);
@@ -20,11 +20,15 @@ async function init() {
 	scene.add( ground );
 	
 	
+<<<<<<< Updated upstream
 	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0]);
 	//console.log(base);
 	//window.setTimeout(()=>{console.log(base)}, 2000);
 	base.scale.set(0.5,0.5,0.5);
 	console.log(base.position);
+=======
+	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,10,0], [Math.PI,0,0])();
+>>>>>>> Stashed changes
 
 	var light = new PointLight("#fff");
 	light.position.y = 100;
