@@ -1,5 +1,6 @@
 const { PointLight, Mesh, PlaneGeometry, MeshBasicMaterial, Vector3 } = require("three");
 const modelPlacer = require("./modelPlacer");
+const spawnEnemies = require("./spawnEnemies");
 
 async function loadScene(scene){
 
@@ -13,8 +14,7 @@ async function loadScene(scene){
 	ground.setRotationFromAxisAngle(new Vector3(1,0,0), -Math.PI/2);
 	scene.add( ground );
 
-	const boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", [0,0,objectZ]);
-	boy.scale.set(0.001,0.001,0.001);
+	spawnEnemies(scene, 0, 0);
 	
 	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0,0,objectZ]);
 	base.scale.set(0.001,0.001,0.001);
