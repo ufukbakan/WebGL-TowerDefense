@@ -10,6 +10,8 @@ function init() {
 	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
 	camera.position.z = 50;
 
+	setCameraEventListener(camera);
+
 	const scene = new Scene();
 	scene.background = new Color("#ffffff");
 
@@ -19,7 +21,9 @@ function init() {
 	const mesh = new Mesh(geometry, material);
 	// scene.add(mesh);
 	
-	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,10,0], [15,0,0])();
+	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0])();
+
+	//base.scale.set(0.5,0.5,0.5);
 
 	var light = new PointLight("#fff");
 	light.position.y = 100;
