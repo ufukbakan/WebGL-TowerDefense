@@ -1,7 +1,7 @@
 function setCameraEventListener(camera) {
     var pushedButtons = [];
     const ONE_DEGREE = Math.PI / 180;
-    const CAMERA_STEP = 0.01;
+    const CAMERA_STEP = 0.1;
 
     window.addEventListener("keydown", keyPush);
     window.addEventListener("keyup", keyPop);

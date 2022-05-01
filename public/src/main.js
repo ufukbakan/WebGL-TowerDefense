@@ -1,4 +1,4 @@
-const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh, Vector3, PointLight, Color } = require("three");
+const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh, Vector3, PointLight, Color, PlaneGeometry, MeshBasicMaterial, DoubleSide } = require("three");
 const setCameraEventListener = require("./camera_control");
 const placeModel = require("./load_scene");
 
@@ -15,16 +15,16 @@ async function init() {
 	const scene = new Scene();
 	scene.background = new Color("#ffffff");
 
-	const geometry = new BoxGeometry(0.2, 0.2, 0.2);
-	const material = new MeshNormalMaterial();
+	const ground = new Mesh(new PlaneGeometry( 50, 50 ), new MeshBasicMaterial( {color: 0xffff00} ));
+	ground.setRotationFromAxisAngle(new Vector3(1,0,0), -Math.PI/2);
+	scene.add( ground );
 	
-	const mesh = new Mesh(geometry, material);
-	// scene.add(mesh);
 	
 	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0]);
 	//console.log(base);
 	//window.setTimeout(()=>{console.log(base)}, 2000);
 	base.scale.set(0.5,0.5,0.5);
+	console.log(base.position);
 
 	var light = new PointLight("#fff");
 	light.position.y = 100;
@@ -38,11 +38,7 @@ async function init() {
 	// animation
 
 	function animation(time) {
-
-		//mesh.rotation.x = time / 2000;
-		mesh.rotation.y = time / 1000;
 		base.rotation.y = time / 1000;
-
 		renderer.render(scene, camera);
 
 	}
