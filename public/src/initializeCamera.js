@@ -6,8 +6,8 @@ function initializeCamera() {
     const CAMERA_STEP = 0.03;
 
     camera.position.z = 1.2;
-    camera.position.y = 0.2;
-    camera.rotateX(ONE_DEGREE*-40);
+    camera.position.y = 2.2;
+    camera.rotateX(ONE_DEGREE*-70);
 
     var pushedButtons = [];
 
