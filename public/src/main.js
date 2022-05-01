@@ -5,7 +5,7 @@ const placeModel = require("./load_scene");
 window.addEventListener("load", init);
 
 
-function init() {
+async function init() {
 	console.log("hello world");
 	const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
 	camera.position.z = 50;
@@ -21,9 +21,10 @@ function init() {
 	const mesh = new Mesh(geometry, material);
 	// scene.add(mesh);
 	
-	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0])();
-
-	//base.scale.set(0.5,0.5,0.5);
+	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0]);
+	//console.log(base);
+	//window.setTimeout(()=>{console.log(base)}, 2000);
+	base.scale.set(0.5,0.5,0.5);
 
 	var light = new PointLight("#fff");
 	light.position.y = 100;
@@ -40,6 +41,7 @@ function init() {
 
 		//mesh.rotation.x = time / 2000;
 		mesh.rotation.y = time / 1000;
+		base.rotation.y = time / 1000;
 
 		renderer.render(scene, camera);
 
