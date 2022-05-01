@@ -1,7 +1,13 @@
-function setCameraEventListener(camera) {
-    var pushedButtons = [];
+const { PerspectiveCamera } = require("three");
+
+function initializeCamera() {
+    const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
+	camera.position.z = 1;
+
     const ONE_DEGREE = Math.PI / 180;
-    const CAMERA_STEP = 0.01;
+    const CAMERA_STEP = 0.03;
+
+    var pushedButtons = [];
 
     window.addEventListener("keydown", keyPush);
     window.addEventListener("keyup", keyPop);
@@ -57,6 +63,8 @@ function setCameraEventListener(camera) {
             pushedButtons.splice( pushedButtons.indexOf(e.key), 1);
         }
     }
+
+    return camera;
 }
 
-module.exports = setCameraEventListener;
+module.exports = initializeCamera;

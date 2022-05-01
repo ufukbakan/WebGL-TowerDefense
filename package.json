@@ -1,7 +1,7 @@
 {
-  "name": "three-js-boilerplate",
+  "name": "tower-defense",
   "version": "1.0.0",
-  "description": "",
+  "description": "WebGL Project for Gazi University Computer Graphics Course",
   "main": "index.js",
   "scripts": {
     "start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p [browserify-livereload --host 127.0.0.1 --port 8080] && node index.js",
@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github-learnthreejs:learnthreejs/three-js-boilerplate.git"
+    "url": "https://github.com/ufukbakan/WebGL-TowerDefense"
   },
-  "author": "",
+  "author": "Ufuk Bakan & Alican Sucu",
   "license": "ISC",
   "dependencies": {
     "browserify": "^17.0.0",
