@@ -1,5 +1,5 @@
 const { PerspectiveCamera, Scene, BoxGeometry, MeshNormalMaterial, WebGLRenderer, Mesh, Vector3, PointLight, Color, PlaneGeometry, MeshBasicMaterial, DoubleSide } = require("three");
-const setCameraEventListener = require("./camera_control");
+const initializeCamera = require("./initializeCamera");
 const placeModel = require("./load_scene");
 
 window.addEventListener("load", init);
@@ -7,19 +7,19 @@ window.addEventListener("load", init);
 
 async function init() {
 	console.log("hello world");
-	const camera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 100);
-	camera.position.z = 50;
+	const camera = initializeCamera();
 
-	setCameraEventListener(camera);
+	let objectZ = 0;
 
 	const scene = new Scene();
 	scene.background = new Color("#ffffff");
 
-	const ground = new Mesh(new PlaneGeometry( 50, 50 ), new MeshBasicMaterial( {color: 0xffff00} ));
+	/*const ground = new Mesh(new PlaneGeometry( 50, 50 ), new MeshBasicMaterial( {color: 0xffff00} ));
 	ground.setRotationFromAxisAngle(new Vector3(1,0,0), -Math.PI/2);
 	scene.add( ground );
+	*/
 	
-	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0]);
+	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,objectZ]);
 	//console.log(base);
 	//window.setTimeout(()=>{console.log(base)}, 2000);
 	base.scale.set(0.5,0.5,0.5);

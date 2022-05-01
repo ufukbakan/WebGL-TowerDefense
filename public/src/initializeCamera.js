@@ -1,8 +1,8 @@
 const { PerspectiveCamera } = require("three");
 
 function initializeCamera() {
-    const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-	camera.position.z = 1;
+    const camera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 10);
+	camera.position.z = 50;
 
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.03;

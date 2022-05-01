@@ -11,9 +11,12 @@ const { GLTFLoader } = require("./GLTFLoader");
 
 const loader = new GLTFLoader();
 
-async function placeModel(scene, path, pos, rot) {
+async function placeModel(scene, path, pos, rot=[0,0,0], sca=[1,1,1]) {
     const gltfData = await loader.loadAsync(path);
-    const model = gltfData.scene;
+    /** @type{THREE.Object3D} */const model = gltfData.scene;
+    model.position.set(pos[0], pos[1], pos[2]);
+    model.rotation.set(rot[0], rot[1], rot[2]);
+    model.scale.set(sca[0], sca[1], sca[2]);
     scene.add(model);
     return model;
 }
