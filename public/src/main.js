@@ -9,7 +9,7 @@ async function init() {
 	console.log("hello world");
 	const camera = initializeCamera();
 
-	let objectZ = 0;
+	let objectZ = 1;
 
 	const scene = new Scene();
 	scene.background = new Color("#ffffff");
@@ -22,7 +22,7 @@ async function init() {
 	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,objectZ]);
 	//console.log(base);
 	//window.setTimeout(()=>{console.log(base)}, 2000);
-	base.scale.set(0.5,0.5,0.5);
+	base.scale.set(0.001,0.001,0.001);
 	console.log(base.position);
 
 	var light = new PointLight("#fff");
