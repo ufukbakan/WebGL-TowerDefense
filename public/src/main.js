@@ -1,6 +1,7 @@
 const { Scene, WebGLRenderer, Color } = require("three");
 const initializeCamera = require("./initializeCamera");
 const loadLevel = require("./loadScene");
+const { enemyMovement } = require("./spawnEnemies");
 
 window.addEventListener("load", init);
 
