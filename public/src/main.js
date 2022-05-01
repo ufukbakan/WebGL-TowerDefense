@@ -19,16 +19,11 @@ async function init() {
 	ground.setRotationFromAxisAngle(new Vector3(1,0,0), -Math.PI/2);
 	scene.add( ground );
 	
-	
-<<<<<<< Updated upstream
 	const base = await placeModel(scene, "\\src\\BaseTower.gltf", [0,0,0], [0,0,0]);
 	//console.log(base);
 	//window.setTimeout(()=>{console.log(base)}, 2000);
 	base.scale.set(0.5,0.5,0.5);
 	console.log(base.position);
-=======
-	placeModel.bind(null, scene, "\\src\\BaseTower.gltf", [0,10,0], [Math.PI,0,0])();
->>>>>>> Stashed changes
 
 	var light = new PointLight("#fff");
 	light.position.y = 100;
