@@ -14,8 +14,8 @@ async function loadScene(scene){
 	let objectZ = 1;
 	const textureLoader = new TextureLoader();
 
-	let groundTexture = textureLoader.load("/src/Assets/grass4.jpg")
-	groundTexture.repeat.set(5,5);
+	let groundTexture = textureLoader.load("/src/Assets/Grass2.jpg");
+	groundTexture.repeat.set(50,50);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;
 
@@ -25,8 +25,7 @@ async function loadScene(scene){
 
 	spawnEnemies(scene, 0, 0);
 	
-	//const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [2, 0, 2]);
-	//base.scale.set(0.01,0.01,0.01);
+	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [-2, 0, -2], [0,0,0], [0.01,0.01,0.01]);
 }
 
 module.exports = loadScene;
