@@ -1,9 +1,7 @@
-const { Euler } = require("three");
-const { Vector3 } = require("three");
 const { PerspectiveCamera } = require("three");
 
 function initializeCamera() {
-    const camera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 10);
+    const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10);
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.001;
     let leftMouseDown = false;
