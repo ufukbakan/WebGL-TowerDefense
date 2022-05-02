@@ -3,7 +3,7 @@ const { Vector3 } = require("three");
 const { PerspectiveCamera } = require("three");
 
 function initializeCamera() {
-    const camera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.01, 10);
+    const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10);
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.001;
     let leftMouseDown = false;
@@ -11,8 +11,8 @@ function initializeCamera() {
     let nextClickIsDouble = false;
 
     camera.position.z = 1.2;
-    camera.position.y = 0.2;
-    camera.rotateX(ONE_DEGREE*-40);
+    camera.position.y = 2.2;
+    camera.rotateX(ONE_DEGREE*-70);
 
     var pushedButtons = [];
 
