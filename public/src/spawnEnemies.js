@@ -2,16 +2,13 @@ const { Vector2, Vector3 } = require("three");
 const modelPlacer = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
-const ENEMY_SPAWN_POS = new Vector3(-2, 0, -2);
+const ENEMY_SPAWN_POS = [-2, 0, -2];
 
 /**
  * 
- * @param {*} scene 
- * @param {*} type 
- * @param {*} count 
- * @param {*} isRandom 
- * @param {*} randomFactor 
- * @returns 
+ * @param {THREE.Scene} scene 
+ * @param {Number} type 
+ * @param {Number} count 
  */
 async function spawnEnemies(scene, type, count) {
     if (count > 0) {
