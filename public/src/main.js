@@ -14,14 +14,12 @@ async function init() {
 	const scene = new Scene();
 	scene.background = new Color("#ffffff");
 
-	await loadScene(scene);
+	loadScene(scene);
 
 	const renderer = new WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
-
-	spawnEnemies(scene, 0, 1);
 
 	function animation(time) {
 		scene.traverse(
