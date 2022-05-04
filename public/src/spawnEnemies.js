@@ -25,8 +25,8 @@ async function spawnEnemies(scene, type, count) {
  * 
  * @param {THREE.Object3D} enemy 
  */
-function updateEnemy(enemy) {
-    objectWalk(enemy, false);
+function updateEnemy(enemy, deltaTime) {
+    objectWalk(enemy, false, deltaTime);
 }
 
 function betweenDirection(object, target) {
@@ -46,14 +46,14 @@ function returnAngle(direction) {
  * 
  * @param {THREE.Object3D} object 
  */
-function objectWalkTo(object, target, lerp = true) {
+function objectWalkTo(object, target, lerp = true, deltaTime) {
     let angle = returnAngle(betweenDirection(object, target));
 
     if (lerp) {
         object.position.lerp(new Vector3(object.position.x + speed * Math.cos(angle * ONE_DEGREE), 0, object.position.z + speed * Math.sin(angle * ONE_DEGREE)), 0.5);
     } else {
-        object.position.x += speed * Math.cos(angle * ONE_DEGREE);
-        object.position.z += speed * Math.sin(angle * ONE_DEGREE);
+        object.position.x += speed * Math.cos(angle * ONE_DEGREE)*deltaTime;
+        object.position.z += speed * Math.sin(angle * ONE_DEGREE)*deltaTime;
     }
 
     object.lookAt(target.position);
@@ -64,15 +64,15 @@ function objectWalkTo(object, target, lerp = true) {
  * @param {THREE.Object3D} object 
  * @param {boolean} lerp 
  */
-function objectWalk(object, lerp = false) {
+function objectWalk(object, lerp = false, deltaTime) {
 
     let angle = object.userData.angle;
 
     if (lerp) {
         object.position.lerp(new Vector3(object.position.x + speed * Math.cos(angle * ONE_DEGREE), 0, object.position.z - speed * Math.sin(angle * ONE_DEGREE)), 0.5);
     } else {
-        object.position.x += object.userData.speed * Math.cos(angle * ONE_DEGREE);
-        object.position.z -= object.userData.speed * Math.sin(angle * ONE_DEGREE);
+        object.position.x += object.userData.speed * Math.cos(angle * ONE_DEGREE)*deltaTime;
+        object.position.z -= object.userData.speed * Math.sin(angle * ONE_DEGREE)*deltaTime;
     }
 
     object.rotation.y = (angle + 90) * ONE_DEGREE;
