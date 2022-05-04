@@ -125,7 +125,7 @@ function initializeCamera(/*scene*/) {
             const sinL = limit(Math.sin(lambda));
             const cosL2 = limit(Math.cos(Math.PI/2 - lambda));
             const sinL2 = limit(Math.sin(Math.PI/2 - lambda));
-            console.log("cos(lambda) "+ cosL + " sin(lambda) "+ sinL);
+            //console.log("cos(lambda) "+ cosL + " sin(lambda) "+ sinL);
             
             var movement = new Vector3(
                 limit(Math.sign(e.movementX)*sinL, 0.71 ) + limit(Math.sign(e.movementY)*limit(Math.cos(Math.PI - lambda) ), 0.71),
