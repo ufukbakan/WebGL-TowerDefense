@@ -25,7 +25,7 @@ async function loadScene(scene){
 
 	spawnEnemies(scene, 0, 0);
 	
-	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [-2, 0, -2], [0,0,0], [0.01,0.01,0.01]);
+	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0, 0, -2], [0,0,0], [0.01,0.01,0.01]);
 }
 
 module.exports = loadScene;

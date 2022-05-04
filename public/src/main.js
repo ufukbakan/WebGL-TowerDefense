@@ -1,4 +1,5 @@
 const { Scene, WebGLRenderer, Color } = require("three");
+const detectCollisions = require("./collisionDetector");
 const initializeCamera = require("./initializeCamera");
 const loadLevel = require("./loadScene");
 
@@ -21,6 +22,9 @@ async function init() {
 
 	function animation(time) {
 		//base.rotation.y = time / 1000;
+
+		detectCollisions(scene);
+
 		renderer.render(scene, camera);
 
 	}
