@@ -2,22 +2,22 @@ const { Vector2, Vector3 } = require("three");
 const modelPlacer = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
+const ENEMY_SPAWN_POS = [-2, 0, -2];
 
 /**
  * 
- * @param {*} scene 
- * @param {*} type 
- * @param {*} count 
- * @param {Vector3} pos 
- * @param {*} isRandom 
- * @param {*} randomFactor 
- * @returns 
+ * @param {THREE.Scene} scene 
+ * @param {Number} type 
+ * @param {Number} count 
  */
-async function spawnEnemies(scene, type, count, pos) {
-    for (let i = 0; i < count; i++) { //rastgele instantiate etme implemente edilmedi
-        let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", pos, [0,0,0], [0.01, 0.01, 0.01]);
-        boy.userData.speed = 0.03;
-        boy.userData.update = updateEnemy.bind(null, boy);
+async function spawnEnemies(scene, type, count) {
+    if (count > 0) {
+        if (type == 0) {
+            let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
+            boy.userData.speed = 0.003;
+            boy.userData.update = updateEnemy.bind(null, boy);
+        }
+        setTimeout(()=>spawnEnemies(scene, type, count-1), 500);
     }
 }
 
@@ -25,8 +25,7 @@ async function spawnEnemies(scene, type, count, pos) {
  * 
  * @param {THREE.Object3D} enemy 
  */
-function updateEnemy(enemy){
-    console.log("updating boy");
+function updateEnemy(enemy) {
     objectWalk(enemy, false);
 }
 
@@ -79,4 +78,4 @@ function objectWalk(object, lerp = false) {
     object.rotation.y = (angle + 90) * ONE_DEGREE;
 }
 
-module.exports = { spawnEnemies, objectWalk, objectWalkTo};
+module.exports = { spawnEnemies, objectWalk, objectWalkTo };
