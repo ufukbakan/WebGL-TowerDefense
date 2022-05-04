@@ -14,7 +14,6 @@ function isCollidable(obj){
  */
 function detectCollisions(scene) {
 
-
     scene.traverse(
         function (obj) {
             if (obj instanceof Scene) {

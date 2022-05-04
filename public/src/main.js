@@ -1,4 +1,5 @@
-const { Scene, WebGLRenderer, Color, BoxGeometry, MeshBasicMaterial, Mesh } = require("three");
+const { Scene, WebGLRenderer, Color} = require("three");
+const detectCollisions = require("./collisionDetector");
 const initializeCamera = require("./initializeCamera");
 const loadScene = require("./loadScene");
 
@@ -26,7 +27,7 @@ async function init() {
 				}
 			}
 		);
-		detectCollisions();
+		detectCollisions(scene);
 		renderer.render(scene, camera);
 	}
 }
