@@ -13,8 +13,8 @@ async function loadScene(scene) {
 
 	const textureLoader = new TextureLoader();
 
-	let groundTexture = textureLoader.load("/src/Assets/Grass2.jpg");
-	groundTexture.repeat.set(50,50);
+	let groundTexture = textureLoader.load("/src/Assets/grass2.jpg");
+	groundTexture.repeat.set(10,10);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;
 
