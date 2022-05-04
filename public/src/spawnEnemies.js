@@ -2,7 +2,6 @@ const { Vector2, Vector3 } = require("three");
 const modelPlacer = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
-var speed = 0.03;
 
 /**
  * 
@@ -16,9 +15,19 @@ var speed = 0.03;
  */
 async function spawnEnemies(scene, type, count, pos) {
     for (let i = 0; i < count; i++) { //rastgele instantiate etme implemente edilmedi
-        let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", pos);
-        boy.scale.set(0.01, 0.01, 0.01);
+        let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", pos, [0,0,0], [0.01, 0.01, 0.01]);
+        boy.userData.speed = 0.03;
+        boy.userData.update = updateEnemy.bind(null, boy);
     }
+}
+
+/**
+ * 
+ * @param {THREE.Object3D} enemy 
+ */
+function updateEnemy(enemy){
+    console.log("updating boy");
+    objectWalk(enemy, false);
 }
 
 function betweenDirection(object, target) {
@@ -51,15 +60,20 @@ function objectWalkTo(object, target, lerp = true) {
     object.lookAt(target.position);
 }
 
-function objectWalk(object, lerp = true) {
+/**
+ * 
+ * @param {THREE.Object3D} object 
+ * @param {boolean} lerp 
+ */
+function objectWalk(object, lerp = false) {
 
     let angle = object.userData.angle;
 
     if (lerp) {
         object.position.lerp(new Vector3(object.position.x + speed * Math.cos(angle * ONE_DEGREE), 0, object.position.z - speed * Math.sin(angle * ONE_DEGREE)), 0.5);
     } else {
-        object.position.x += speed * Math.cos(angle * ONE_DEGREE);
-        object.position.z -= speed * Math.sin(angle * ONE_DEGREE);
+        object.position.x += object.userData.speed * Math.cos(angle * ONE_DEGREE);
+        object.position.z -= object.userData.speed * Math.sin(angle * ONE_DEGREE);
     }
 
     object.rotation.y = (angle + 90) * ONE_DEGREE;
