@@ -1,7 +1,7 @@
 const { Scene, WebGLRenderer, Color, BoxGeometry, MeshBasicMaterial, Mesh } = require("three");
 const initializeCamera = require("./initializeCamera");
 const loadScene = require("./loadScene");
-const { objectWalk, objectWalkTo } = require("./spawnEnemies");
+const { objectWalk, objectWalkTo, spawnEnemies } = require("./spawnEnemies");
 
 window.addEventListener("load", init);
 var counter = 0;
@@ -20,6 +20,8 @@ async function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
+
+	spawnEnemies(scene, 0, 1);
 
 	function animation(time) {
 		scene.traverse(
