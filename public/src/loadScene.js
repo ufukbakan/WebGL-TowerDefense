@@ -12,7 +12,7 @@ async function loadScene(scene) {
 	ground.setRotationFromAxisAngle(new Vector3(1, 0, 0), -Math.PI / 2);
 	scene.add(ground);
 
-	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0, 0, 0]);
+	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [-2, 0, -2]);
 	base.scale.set(0.01, 0.01, 0.01);
 
 	await spawnEnemies(scene, 0, 1, [0, 0, 0]);
