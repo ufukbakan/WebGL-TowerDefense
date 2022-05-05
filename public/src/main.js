@@ -20,7 +20,7 @@ async function init() {
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
 
-	pickingObject(renderer, scene, camera);
+	pickingObject(renderer, scene, camera, "\\src\\Assets\\Boy.gltf");
 
 	function animation(time) {
 		scene.traverse(
