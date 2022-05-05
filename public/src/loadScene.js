@@ -3,6 +3,7 @@ const { RepeatWrapping } = require("three");
 const { MeshLambertMaterial } = require("three");
 const { PointLight, Mesh, PlaneGeometry, MeshBasicMaterial, Vector3 } = require("three");
 const modelPlacer = require("./modelPlacer");
+const initPaths = require("./pathInitializer");
 const { spawnEnemies } = require("./spawnEnemies");
 
 async function loadScene(scene) {
@@ -22,6 +23,7 @@ async function loadScene(scene) {
 	ground.setRotationFromAxisAngle(new Vector3(1,0,0), Math.PI/-2);
 	scene.add( ground );
 
+	initPaths(scene);
 	spawnEnemies(scene, 0, 1);
 	
 	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0, 0, -2], [0,0,0], [0.01,0.01,0.01]);

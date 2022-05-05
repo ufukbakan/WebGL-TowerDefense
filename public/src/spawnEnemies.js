@@ -15,9 +15,22 @@ async function spawnEnemies(scene, type, count) {
         if (type == 0) {
             let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             boy.userData.speed = 0.003;
+            boy.userData.rotatedAlready = [];
             boy.userData.update = updateEnemy.bind(null, boy);
+            boy.userData.collisionHandler = enemyCollisionHandler.bind(null, boy);
         }
         setTimeout(()=>spawnEnemies(scene, type, count-1), 500);
+    }
+}
+
+/**
+ * @param {THREE.Object3D} enemy
+ * @param {THREE.Object3D} colliding_with 
+ */
+function enemyCollisionHandler(enemy, colliding_with){
+    if(colliding_with.name == "path_rotator" && !enemy.userData.rotatedAlready.includes(colliding_with.uuid) ){
+        enemy.userData.direction -= 90;
+        enemy.userData.rotatedAlready.push(colliding_with.uuid);
     }
 }
 
@@ -66,16 +79,16 @@ function objectWalkTo(object, target, lerp = true, deltaTime) {
  */
 function objectWalk(object, lerp = false, deltaTime) {
 
-    let angle = object.userData.angle;
+    let angle = object.userData.direction*ONE_DEGREE;
 
     if (lerp) {
-        object.position.lerp(new Vector3(object.position.x + speed * Math.cos(angle * ONE_DEGREE), 0, object.position.z - speed * Math.sin(angle * ONE_DEGREE)), 0.5);
+        object.position.lerp(new Vector3(object.position.x + speed * Math.cos(angle), 0, object.position.z - speed * Math.sin(angle)), 0.5);
     } else {
-        object.position.x += object.userData.speed * Math.cos(angle * ONE_DEGREE)*deltaTime;
-        object.position.z -= object.userData.speed * Math.sin(angle * ONE_DEGREE)*deltaTime;
+        object.position.x += object.userData.speed * Math.cos(angle)*deltaTime;
+        object.position.z -= object.userData.speed * Math.sin(angle)*deltaTime;
     }
 
-    object.rotation.y = (angle + 90) * ONE_DEGREE;
+    object.rotation.y = angle + Math.PI/2;
 }
 
 module.exports = { spawnEnemies, objectWalk, objectWalkTo };
