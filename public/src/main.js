@@ -1,5 +1,5 @@
 const { Scene, WebGLRenderer, Color} = require("three");
-const { pickingObject } = require("./Assets/pickingObject");
+const { pickingObject } = require("./pickingObject");
 const detectCollisions = require("./collisionDetector");
 const initializeCamera = require("./initializeCamera");
 const loadScene = require("./loadScene");
@@ -20,7 +20,7 @@ async function init() {
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
 
-	pickingObject(renderer, scene, camera, "\\src\\Assets\\Boy.gltf");
+	pickingObject(renderer, scene, camera);
 
 	function animation(time) {
 		scene.traverse(

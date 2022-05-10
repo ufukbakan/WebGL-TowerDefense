@@ -1,5 +1,5 @@
 const { Raycaster, Group } = require("three");
-const modelPlacer = require("../modelPlacer");
+const modelPlacer = require("./modelPlacer");
 
 function pickingObject(renderer, scene, camera, objectPath = "") {
 
@@ -26,41 +26,33 @@ function pickingObject(renderer, scene, camera, objectPath = "") {
         let raycaster = new Raycaster();
         raycaster.setFromCamera(canvasToClip(event), camera);
         const intersectedObjects = raycaster.intersectObjects(scene.children);
-        let pickedObject;
-
-        if (intersectedObjects.length) {
-            pickedObject = (intersectedObjects[0].object.parent instanceof Group) ? intersectedObjects[0].object.parent : undefined;
+        
+        if (intersectedObjects.length > 0) {
+            let picked = intersectedObjects[0];
+            console.log(picked.object);
         }
-
-        console.log(pickedObject);
-
-        return pickedObject;
     }
 
-    function putObject(event) {        
+    function putObject(event) {
         let raycaster = new Raycaster();
         raycaster.setFromCamera(canvasToClip(event), camera);
         const intersectedObjects = raycaster.intersectObjects(scene.children);
-        let pickedObject;
 
-        if (intersectedObjects.length) {
-            pickedObject = intersectedObjects[0];
+        if (intersectedObjects.length > 0 && intersectedObjects[0].object.name == "Ground") {
+            let picked = intersectedObjects[0];
+            let position = picked.point;
+            position.y = 0;
+            modelPlacer(scene, objectPath, [position.x, position.y, position.z], [0, 0, 0], [0.01, 0.01, 0.01]);
         }
-
-        let position = pickedObject.point;
-        position.y = 0;
-        console.log(position);
-        modelPlacer(scene, objectPath, [position.x, position.y, position.z], [0, 0, 0], [0.01, 0.01, 0.01]);
     }
 
-    window.addEventListener('click', function(event){
-        if(objectPath == ""){
+    window.addEventListener('click', function (event) {
+        if (objectPath == "") {
             pickObject(event)
-        }else{
+        } else {
             putObject(event, objectPath);
         }
     });
 }
-
 
 module.exports = { pickingObject };
