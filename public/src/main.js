@@ -8,7 +8,6 @@ window.addEventListener("load", init);
 
 async function init() {
 	let last_time = 0;
-	console.log("hello world");
 	const camera = initializeCamera();
 
 	const scene = new Scene();
@@ -21,7 +20,7 @@ async function init() {
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
 
-	pickingObject(renderer, scene, camera);
+	pickingObject(renderer, scene, camera, "/src/Assets/Boy.gltf");
 
 	function animation(time) {
 		const deltaTime = (time - last_time) / 10;

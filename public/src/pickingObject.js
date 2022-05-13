@@ -29,7 +29,6 @@ function pickingObject(renderer, scene, camera, objectPath = "") {
         
         if (intersectedObjects.length > 0) {
             let picked = intersectedObjects[0];
-            console.log(picked.object);
         }
     }
 

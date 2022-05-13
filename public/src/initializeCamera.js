@@ -18,9 +18,7 @@ function initializeCamera(/*scene*/) {
     let defaultZoomRadius = 3;
     let cameraPositionVector = new Vector3(defaultZoomRadius, ONE_DEGREE*90, 0);
 
-
     updateCamera();
-    console.log("camera pos" + JSON.stringify(camera.position));
 
     function calculateOrbitalCoordinates(rplVector) {
         const radius = rplVector.x;
