@@ -21,6 +21,7 @@ async function loadScene(scene) {
 
     const ground = new Mesh(new PlaneGeometry( 8, 8 ), new MeshLambertMaterial( { map: groundTexture } ));
 	ground.setRotationFromAxisAngle(new Vector3(1,0,0), Math.PI/-2);
+	ground.name = "Ground";
 	scene.add( ground );
 
 	initPaths(scene);

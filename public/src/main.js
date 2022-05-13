@@ -1,4 +1,5 @@
 const { Scene, WebGLRenderer, Color} = require("three");
+const { pickingObject } = require("./pickingObject");
 const detectCollisions = require("./collisionDetector");
 const initializeCamera = require("./initializeCamera");
 const loadScene = require("./loadScene");
@@ -20,6 +21,8 @@ async function init() {
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);
 
+	pickingObject(renderer, scene, camera);
+
 	function animation(time) {
 		const deltaTime = (time - last_time) / 10;
 		last_time = time;
@@ -31,6 +34,7 @@ async function init() {
 			}
 		);
 		detectCollisions(scene);
+
 		renderer.render(scene, camera);
 	}
 }
