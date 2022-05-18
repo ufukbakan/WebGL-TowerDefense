@@ -1,13 +1,17 @@
-const { TextureLoader } = require("three");
-const { RepeatWrapping } = require("three");
-const { MeshLambertMaterial } = require("three");
-const { PointLight, Mesh, PlaneGeometry, MeshBasicMaterial, Vector3 } = require("three");
+const { PointLight, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color,WebGLRenderer } = require("three");
+const initializeCamera = require("./initializeCamera");
 const modelPlacer = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
+const { pickingObject } = require("./pickingObject");
 const { spawnEnemies } = require("./spawnEnemies");
 
-async function loadScene(scene) {
+async function loadScene(canvas=undefined) {
 
+	const scene = new Scene();
+	const renderer = new WebGLRenderer({ antialias: true, canvas: canvas});
+	const camera = initializeCamera();
+
+	scene.background = new Color("#ffffff");
 	var light = new PointLight("#fff");
 	light.position.y = 100;
 	scene.add(light);
@@ -24,10 +28,14 @@ async function loadScene(scene) {
 	ground.name = "Ground";
 	scene.add( ground );
 
+	pickingObject(renderer, scene, camera, "/src/Assets/Boy.gltf");
 	initPaths(scene);
 	spawnEnemies(scene, 0, 1);
 	
 	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0, 0, -2], [0,0,0], [0.01,0.01,0.01]);
+	base.name = "Base";
+
+	return [scene, renderer, camera];
 }
 
 module.exports = loadScene;
