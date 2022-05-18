@@ -15,6 +15,7 @@
   "author": "Ufuk Bakan & Alican Sucu",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^27.5.1",
     "browserify": "^17.0.0",
     "browserify-hmr": "^0.1.10",
     "browserify-livereload": "^1.0.10",
