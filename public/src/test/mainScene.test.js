@@ -21,7 +21,7 @@ const modelPlacer = require("../modelPlacer");
 modelPlacer.mockImplementation(
     (scene, path, pos, rot=[0,0,0], sca=[1,1,1])=>{
         const { Object3D } = require("three");
-        const model = new THREE.Object3D();
+        const model = new Object3D();
         model.position.set(pos[0], pos[1], pos[2]);
         model.rotation.set(rot[0], rot[1], rot[2]);
         model.userData.direction = model.rotation.y * Math.PI/180;
