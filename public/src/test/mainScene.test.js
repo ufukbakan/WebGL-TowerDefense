@@ -21,6 +21,7 @@ const modelPlacer = require("../modelPlacer");
 modelPlacer.mockImplementation(
     (scene, path, pos, rot=[0,0,0], sca=[1,1,1])=>{
         const { Object3D } = require("three");
+        // GLTF LOADER JEST İLE SONSUZ DÖNGÜYE GİRDİĞİ İÇİN BOŞ MODEL MOCKLANDI :
         const model = new Object3D();
         model.position.set(pos[0], pos[1], pos[2]);
         model.rotation.set(rot[0], rot[1], rot[2]);
