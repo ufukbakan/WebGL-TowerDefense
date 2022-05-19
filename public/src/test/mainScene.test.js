@@ -16,21 +16,16 @@ global.fetch = require("jest-mock-fetch").default;
 global.Request = nodefetch.Request;
 global.Headers = nodefetch.Headers;
 
-jest.mock("../modelPlacer");
-const modelPlacer = require("../modelPlacer");
-modelPlacer.mockImplementation(
-    (scene, path, pos, rot=[0,0,0], sca=[1,1,1])=>{
-        const { Object3D } = require("three");
-        // GLTF LOADER JEST İLE SONSUZ DÖNGÜYE GİRDİĞİ İÇİN BOŞ MODEL MOCKLANDI :
-        const model = new Object3D();
-        model.position.set(pos[0], pos[1], pos[2]);
-        model.rotation.set(rot[0], rot[1], rot[2]);
-        model.userData.direction = model.rotation.y * Math.PI/180;
-        model.scale.set(sca[0], sca[1], sca[2]);
-        scene.add(model);
-        return model;
+jest.mock("../GLTFLoader", ()=>{
+    const { Object3D } = require("three");
+    // GLTF Loader sonsuz döngüye girdiği için object3d döndürmek üzere mocklandı
+    class GLTFLoader{
+        loadAsync(path){
+            return {scene: new Object3D()};
+        }
     }
-)
+    return {GLTFLoader};
+});
 
 const loadScene = require("../loadScene");
 jest.setTimeout(30000);
