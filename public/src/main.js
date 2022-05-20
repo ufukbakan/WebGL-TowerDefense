@@ -8,7 +8,7 @@ async function init() {
 	let last_time = 0;
 
 	const [scene, renderer, camera] = await loadScene();
-	console.log("alican");
+	
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animation);
 	document.body.appendChild(renderer.domElement);

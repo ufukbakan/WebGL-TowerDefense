@@ -15,6 +15,7 @@ function placeRotators(scene) {
         let rotatorGroup = new Group();
         rotatorGroup.name = "path_rotator";
         let rotator = new Mesh(new BoxGeometry(0.5, mesh_height, 0.5), new MeshBasicMaterial({ color: 0x00ff00, alphaTest: true, opacity:0 }));
+        rotator.name = "rotator";
         rotatorGroup.position.set(position.x, position.y, position.z);
         rotatorGroup.add(rotator);
         scene.add(rotatorGroup);
