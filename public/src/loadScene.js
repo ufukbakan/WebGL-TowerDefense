@@ -1,16 +1,19 @@
-const { PointLight, PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
-const initializeCamera = require("./initializeCamera");
 const lightTransforms = require("./lightTransformation");
-const modelPlacer = require("./modelPlacer");
+const { PointLight, PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
+const hudScreen = require("./hudScreen");
+const initializeCamera = require("./initializeCamera");
+const { modelPlacer, scenes } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
 const { pickingObject } = require("./pickingObject");
 const { spawnEnemies } = require("./spawnEnemies");
 
-async function loadScene(canvas = undefined) {
 
+async function loadScene(canvas = undefined) {
 	const scene = new Scene();
+	scene.name = "WorldScene"
 	const renderer = new WebGLRenderer({ antialias: true, canvas: canvas });
 	const camera = initializeCamera();
+	scenes.mainScene = scene;
 
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = PCFShadowMap;
@@ -30,16 +33,15 @@ async function loadScene(canvas = undefined) {
 	ground.receiveShadow = true;
 	scene.add(ground);
 
-	pickingObject(renderer, scene, camera, "/src/Assets/Boy.gltf");
+	pickingObject(renderer, scene, camera);
 	initPaths(scene);
 	spawnEnemies(scene, 0, 1);
+	const [hudScene, hudCamera] = hudScreen(renderer);
 
-	const base = await modelPlacer(scene, "\\src\\Assets\\BaseTower.gltf", [0, 0, -2], [0, 0, 0], [0.01, 0.01, 0.01]);
+	const base = await modelPlacer(scene, "BaseTower", [0, 0, -2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
 	base.name = "Base";
 
-	lightTransforms(scene);
-
-	return [scene, renderer, camera];
+	return [scene, renderer, camera, hudScene, hudCamera];
 }
 
 module.exports = loadScene;
