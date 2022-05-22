@@ -1,10 +1,16 @@
+const { MeshBasicMaterial } = require("three");
 const { Raycaster } = require("three");
 const { modelPlacer } = require("./modelPlacer");
 
 var lastPicked = {
     name: "",
-    object: undefined
+    object: undefined,
+    originalMaterial: [],
+    lastColorIsRed: false
 }
+const redMeshMaterial = new MeshBasicMaterial({ color: 0xff0000, opacity: 0.75, transparent: true });
+const greenMeshMaterial = new MeshBasicMaterial({ color: 0x00ff00, opacity: 0.75, transparent: true });
+const raycaster = new Raycaster();
 
 function pickingObject(renderer, scene, camera) {
 
@@ -27,19 +33,27 @@ function pickingObject(renderer, scene, camera) {
         return clipPosition;
     }
 
-    function pickObject(event) {
-        let raycaster = new Raycaster();
-        raycaster.setFromCamera(canvasToClip(event), camera);
-        const intersectedObjects = raycaster.intersectObjects(scene.children);
+    async function pickObject(event) {
 
-        if (intersectedObjects.length > 0) {
-            let picked = intersectedObjects[0];
+        raycaster.setFromCamera(canvasToClip(event), camera);
+        const intersections = raycaster.intersectObjects(scene.children);
+
+        if (intersections.length > 0) {
+            let picked = intersections[0];
 
 
             if (picked.object.userData.content) {
                 if (lastPicked.name != picked.object.userData.content) {
                     lastPicked.name = picked.object.userData.content;
-                    lastPicked.object = modelPlacer(scene, lastPicked.name, [0, 0, 0], [0, 0, 0], [0.01, 0.01, 0.01], 0.2);
+                    lastPicked.object = await modelPlacer(scene, lastPicked.name, [0, 0, 0], [0, 0, 0], [0.01, 0.01, 0.01]);
+                    let originalMaterials = [];
+                    lastPicked.object.traverse( m => {
+                        if(m.material){
+                            originalMaterials.push(m.material);
+                            m.material = greenMeshMaterial;
+                        }
+                    })
+                    lastPicked.originalMaterial = originalMaterials;
                 } else {
                     lastPicked.name = "";
                     lastPicked.object = undefined;
@@ -49,22 +63,19 @@ function pickingObject(renderer, scene, camera) {
     }
 
     function putObject(event) {
-        let raycaster = new Raycaster();
+
         raycaster.setFromCamera(canvasToClip(event), camera);
-        const intersectedObjects = raycaster.intersectObjects(scene.children);
+        const intersections = raycaster.intersectObjects(scene.children);
 
-        let a = intersectedObjects.find(x => x.object.name == "Ground")
-        let b = intersectedObjects.find(x => x.object.name == "forbidden")
+        let groundIntersection = intersections.find(x => x.object.name == "Ground")
+        let forbiddenIntersection = intersections.find(x => x.object.name == "forbidden")
 
-        if (intersectedObjects.length > 0 && a != undefined && b == undefined && lastPicked.name != "") {
+        if (groundIntersection && !forbiddenIntersection && lastPicked.name != "") {
             lastPicked.name = "";
-            lastPicked.object.then(a => {
-                a.traverse((x) => {
-                    if (x.isMesh) {
-                        x.material.opacity = 1;
-                        x.material.transparent = true;
-                    }
-                })
+            lastPicked.object.traverse((x) => {
+                if (x.material) {
+                    x.material = lastPicked.originalMaterial.shift();
+                }
             })
             console.log(scene);
         }
@@ -76,26 +87,38 @@ function pickingObject(renderer, scene, camera) {
         } else {
             putObject(event);
         }
-    }
-    );
+    });
 
 
     window.addEventListener("mousemove", function (event) {
-        if (lastPicked.name != "") {
-            let raycaster = new Raycaster();
+        if (lastPicked.name != "" && lastPicked.object) {
+
             raycaster.setFromCamera(canvasToClip(event), camera);
-            const intersectedObjects = raycaster.intersectObjects(scene.children);
+            const intersections = raycaster.intersectObjects(scene.children);
 
-            let a = intersectedObjects.find(x => x.object.name == "Ground")
-            let b = intersectedObjects.find(x => x.object.name == "forbidden")
+            let groundIntersection = intersections.find(x => x.object.name == "Ground")
+            let forbiddenIntersection = intersections.find(x => x.object.name == "forbidden")
 
-            if (intersectedObjects.length > 0 && a != undefined && b == undefined && lastPicked.name != "") {
-                let picked = a;
-                let position = picked.point;
+            if (groundIntersection && lastPicked.name != "") {
+                if(forbiddenIntersection && !lastPicked.lastColorIsRed){
+                    lastPicked.object.traverse(m => {
+                        if(m.material){
+                            m.material = redMeshMaterial;
+                        }
+                    });
+                    lastPicked.lastColorIsRed = true;
+                }
+                else if(!forbiddenIntersection && lastPicked.lastColorIsRed){
+                    lastPicked.object.traverse(m => {
+                        if(m.material){
+                            m.material = greenMeshMaterial;
+                        }
+                    });
+                    lastPicked.lastColorIsRed = false;
+                }
+                let position = groundIntersection.point;
                 position.y = 0;
-                lastPicked.object.then(x => {
-                    x.position.set(position.x, position.y, position.z);
-                })
+                lastPicked.object.position.set(position.x, position.y, position.z);
             }
         }
     });
