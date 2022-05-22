@@ -14,6 +14,7 @@ async function spawnEnemies(scene, type, count) {
     if (count > 0) {
         if (type == 0) {
             let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
+            boy.name = "BOY";
             boy.userData.speed = 0.003;
             boy.userData.rotatedAlready = [];
             boy.userData.update = updateEnemy.bind(null, boy);
