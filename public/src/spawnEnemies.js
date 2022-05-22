@@ -13,7 +13,7 @@ const ENEMY_SPAWN_POS = [-2, 0, -2];
 async function spawnEnemies(scene, type, count) {
     if (count > 0) {
         if (type == 0) {
-            let boy = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
+            let boy = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01], 1);
             boy.name = "BOY";
             boy.userData.speed = 0.003;
             boy.userData.rotatedAlready = [];

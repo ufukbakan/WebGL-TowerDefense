@@ -1,4 +1,5 @@
 const { GLTFLoader } = require("./GLTFLoader");
+const { fixLights } = require("./lightTransformation");
 
 const loader = new GLTFLoader();
 
@@ -14,7 +15,7 @@ var scenes = {
 };
 
 //hala scene alıyor belki başka bir şeyde kullanılır diye
-async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], opacity) {
+async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], opacity = 1) {
     const gltfData = await loader.loadAsync("\\src\\Assets\\" + path + ".gltf");
     /** @type{THREE.Object3D} */const model = gltfData.scene;
 
@@ -31,6 +32,9 @@ async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], o
     model.scale.set(sca[0], sca[1], sca[2]);
 
     scenes.mainScene.add(model);
+
+    fixLights(scenes.mainScene);
+
     return model;
 }
 

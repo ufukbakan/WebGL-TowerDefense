@@ -29,15 +29,15 @@ function placeRotators(scene) {
     const mesh_height = 0.05;
     let forbiddenPathGroup = new Group();
     forbiddenPathGroup.name = "forbidden";
-    let forbiddenPath1 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
+    let forbiddenPath1 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
     forbiddenPath1.name = "forbidden";
     forbiddenPath1.position.set(0, mesh_height/2, -2);
 
-    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,16), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
+    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,16), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
     forbiddenPath2.name = "forbidden";
     forbiddenPath2.position.set(2, mesh_height/2, 0);
 
-    let forbiddenPath3 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
+    let forbiddenPath3 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
     forbiddenPath3.name = "forbidden";
     forbiddenPath3.position.set(0, mesh_height/2, 2);
 

@@ -1,4 +1,4 @@
-const lightTransforms = require("./lightTransformation");
+const { lightTransforms } = require("./lightTransformation");
 const { PointLight, PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
 const hudScreen = require("./hudScreen");
 const initializeCamera = require("./initializeCamera");
@@ -40,6 +40,7 @@ async function loadScene(canvas = undefined) {
 
 	const base = await modelPlacer(scene, "BaseTower", [0, 0, -2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
 	base.name = "Base";
+	lightTransforms(scene);
 
 	return [scene, renderer, camera, hudScene, hudCamera];
 }

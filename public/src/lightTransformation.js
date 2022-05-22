@@ -1,12 +1,7 @@
 const { DirectionalLightHelper, CameraHelper, DirectionalLight } = require("three");
 
-/**
- * 
- * @param {THREE.Scene} scene 
- */
-function lightTransforms(scene) {
-    var step = 0.3;
 
+function fixLights(scene) {
     scene.traverse((obj) => {
         switch (obj.name) {
             case "Ground":
@@ -20,6 +15,16 @@ function lightTransforms(scene) {
                 obj.castShadow = true;
         }
     })
+}
+
+/**
+ * 
+ * @param {THREE.Scene} scene 
+ */
+function lightTransforms(scene) {
+    var step = 0.3;
+
+    fixLights(scene);
 
     var light = new DirectionalLight("#fff");
     light.position.y = 3;
@@ -34,8 +39,6 @@ function lightTransforms(scene) {
     scene.add(helper);
 
     window.addEventListener("keydown", (e) => {
-        console.log(e.code);
-
         switch (e.code) {
             case "ArrowUp":
                 if (light.position.z > -4) {
@@ -70,4 +73,4 @@ function lightTransforms(scene) {
         }
     });
 }
-module.exports = lightTransforms;
+module.exports = {lightTransforms, fixLights};

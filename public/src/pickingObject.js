@@ -66,6 +66,7 @@ function pickingObject(renderer, scene, camera) {
                     }
                 })
             })
+            console.log(scene);
         }
     }
 
