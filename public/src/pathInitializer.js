@@ -14,7 +14,7 @@ function placeRotators(scene) {
     rotatorPositions.forEach(position =>{
         let rotatorGroup = new Group();
         rotatorGroup.name = "path_rotator";
-        let rotator = new Mesh(new BoxGeometry(0.5, mesh_height, 0.5), new MeshBasicMaterial({ color: 0x00ff00, alphaTest: true, opacity:0 }));
+        let rotator = new Mesh(new BoxGeometry(0.5, mesh_height, 0.5), new MeshBasicMaterial({ color: 0x00ff00, alphaTest: true, opacity:1 }));
         rotatorGroup.position.set(position.x, position.y, position.z);
         rotatorGroup.add(rotator);
         scene.add(rotatorGroup);
@@ -28,15 +28,15 @@ function placeRotators(scene) {
     const mesh_height = 0.05;
     let forbiddenPathGroup = new Group();
     forbiddenPathGroup.name = "forbidden";
-    let forbiddenPath1 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
+    let forbiddenPath1 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
     forbiddenPath1.name = "forbidden";
     forbiddenPath1.position.set(0, mesh_height/2, -2);
 
-    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,16), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
+    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,16), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
     forbiddenPath2.name = "forbidden";
     forbiddenPath2.position.set(2, mesh_height/2, 0);
 
-    let forbiddenPath3 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0, alphaTest: true}));
+    let forbiddenPath3 =  new Mesh(new BoxGeometry(16,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:1, alphaTest: true}));
     forbiddenPath3.name = "forbidden";
     forbiddenPath3.position.set(0, mesh_height/2, 2);
 

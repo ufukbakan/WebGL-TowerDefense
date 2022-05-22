@@ -1,7 +1,12 @@
-const { Raycaster, Group } = require("three");
-const modelPlacer = require("./modelPlacer");
+const { Raycaster } = require("three");
+const { modelPlacer } = require("./modelPlacer");
 
-function pickingObject(renderer, scene, camera, objectPath = "") {
+var lastPicked = {
+    name: "",
+    object: undefined
+}
+
+function pickingObject(renderer, scene, camera) {
 
     let canvas = renderer.domElement;
 
@@ -26,9 +31,20 @@ function pickingObject(renderer, scene, camera, objectPath = "") {
         let raycaster = new Raycaster();
         raycaster.setFromCamera(canvasToClip(event), camera);
         const intersectedObjects = raycaster.intersectObjects(scene.children);
-        
+
         if (intersectedObjects.length > 0) {
             let picked = intersectedObjects[0];
+
+
+            if (picked.object.userData.content) {
+                if (lastPicked.name != picked.object.userData.content) {
+                    lastPicked.name = picked.object.userData.content;
+                    lastPicked.object = modelPlacer(scene, lastPicked.name, [0, 0, 0], [0, 0, 0], [0.01, 0.01, 0.01], 0.2);
+                } else {
+                    lastPicked.name = "";
+                    lastPicked.object = undefined;
+                }
+            }
         }
     }
 
@@ -37,21 +53,51 @@ function pickingObject(renderer, scene, camera, objectPath = "") {
         raycaster.setFromCamera(canvasToClip(event), camera);
         const intersectedObjects = raycaster.intersectObjects(scene.children);
 
-        if (intersectedObjects.length > 0 && intersectedObjects[0].object.name == "Ground") {
-            let picked = intersectedObjects[0];
-            let position = picked.point;
-            position.y = 0;
-            modelPlacer(scene, objectPath, [position.x, position.y, position.z], [0, 0, 0], [0.01, 0.01, 0.01]);
+        let a = intersectedObjects.find(x => x.object.name == "Ground")
+        let b = intersectedObjects.find(x => x.object.name == "forbidden")
+
+        if (intersectedObjects.length > 0 && a != undefined && b == undefined && lastPicked.name != "") {
+            lastPicked.name = "";
+            lastPicked.object.then(a => {
+                a.traverse((x) => {
+                    if (x.isMesh) {
+                        x.material.opacity = 1;
+                        x.material.transparent = true;
+                    }
+                })
+            })
         }
     }
 
-    window.addEventListener('click', function (event) {
-        if (objectPath == "") {
+    window.addEventListener("click", function (event) {
+        if (lastPicked.name == "") {
             pickObject(event)
         } else {
-            putObject(event, objectPath);
+            putObject(event);
+        }
+    }
+    );
+
+
+    window.addEventListener("mousemove", function (event) {
+        if (lastPicked.name != "") {
+            let raycaster = new Raycaster();
+            raycaster.setFromCamera(canvasToClip(event), camera);
+            const intersectedObjects = raycaster.intersectObjects(scene.children);
+
+            let a = intersectedObjects.find(x => x.object.name == "Ground")
+            let b = intersectedObjects.find(x => x.object.name == "forbidden")
+
+            if (intersectedObjects.length > 0 && a != undefined && b == undefined && lastPicked.name != "") {
+                let picked = a;
+                let position = picked.point;
+                position.y = 0;
+                lastPicked.object.then(x => {
+                    x.position.set(position.x, position.y, position.z);
+                })
+            }
         }
     });
 }
 
-module.exports = { pickingObject };
+module.exports = { pickingObject, lastPicked };

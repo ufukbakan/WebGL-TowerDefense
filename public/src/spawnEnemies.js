@@ -1,5 +1,5 @@
 const { Vector2, Vector3 } = require("three");
-const modelPlacer = require("./modelPlacer");
+const {modelPlacer} = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
 const ENEMY_SPAWN_POS = [-2, 0, -2];
@@ -13,7 +13,7 @@ const ENEMY_SPAWN_POS = [-2, 0, -2];
 async function spawnEnemies(scene, type, count) {
     if (count > 0) {
         if (type == 0) {
-            let boy = await modelPlacer(scene, "\\src\\Assets\\Boy.gltf", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
+            let boy = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             boy.userData.speed = 0.003;
             boy.userData.rotatedAlready = [];
             boy.userData.update = updateEnemy.bind(null, boy);
