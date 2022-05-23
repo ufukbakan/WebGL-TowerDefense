@@ -1,3 +1,6 @@
+const { MeshBasicMaterial } = require("three");
+const { BoxGeometry } = require("three");
+const { Mesh } = require("three");
 const detectCollisions = require("./collisionDetector");
 const loadScene  = require("./loadScene");
 const { lastPicked } = require("./pickingObject");

@@ -34,7 +34,7 @@ async function loadScene(canvas = undefined) {
 	scene.add(ground);
 
 	initPaths(scene);
-	spawnEnemies(scene, 0, 1);
+	spawnEnemies(scene, 0, 2, 100);
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 
 	const base = await modelPlacer(scene, "BaseTower", [0, 0, -2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
