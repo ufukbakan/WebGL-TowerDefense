@@ -15,21 +15,15 @@ var scenes = {
 };
 
 //hala scene alıyor belki başka bir şeyde kullanılır diye
-async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], opacity = 1) {
+async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], name) {
     const gltfData = await loader.loadAsync("\\src\\Assets\\" + path + ".gltf");
     /** @type{THREE.Object3D} */const model = gltfData.scene;
-
-    model.traverse((x) => {
-        if (x.isMesh) {
-            x.material.opacity = opacity;
-            x.material.transparent = true;
-        }
-    })
 
     model.position.set(pos[0], pos[1], pos[2]);
     model.rotation.set(rot[0], rot[1], rot[2]);
     model.userData.direction = model.rotation.y * Math.PI / 180;
     model.scale.set(sca[0], sca[1], sca[2]);
+    model.name = name;
 
     scenes.mainScene.add(model);
 

@@ -16,7 +16,7 @@ const { pickingObject } = require("./pickingObject");
  * 
  * @param {THREE.Renderer} renderer 
  */
-function hudScreen(renderer) {
+function hudScreen(renderer, mainScene, mainCamera) {
     var canvas = renderer.domElement;
 
     var hudCamera = new OrthographicCamera(-canvas.width * 5, canvas.width * 5,
@@ -27,13 +27,6 @@ function hudScreen(renderer) {
 
     var hudScene = new Scene();
     hudScene.name = "UIScene";
-
-    var hudBgMat = new MeshBasicMaterial({ color: "#fff", opacity: 0 });
-    hudBgMat.transparent = true;
-    var hudBackground = new Mesh(new PlaneGeometry(canvas.width * 10, canvas.height * 10), hudBgMat);
-    hudBackground.name = "hudBG";
-    hudBackground.position.set(0, 0, -1);
-    hudScene.add(hudBackground);
 
     var element = createUIText(canvas, [-0.8, 0.3], [0.8, 0.4], "BaseTower", 50, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
     var element1 = createUIText(canvas, [-0.8, 0], [0.8, 0.4], "BaseTower", 50, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
@@ -46,7 +39,7 @@ function hudScreen(renderer) {
     hudScene.add(element3);
     hudScene.add(element4);
 
-    pickingObject(renderer, hudScene, hudCamera);
+    pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera);
     return [hudScene, hudCamera]
 }
 
