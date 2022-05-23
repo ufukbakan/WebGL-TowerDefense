@@ -1,3 +1,9 @@
+const { DoubleSide } = require("three");
+const { BoxGeometry } = require("three");
+const { Raycaster } = require("three");
+const { PlaneGeometry } = require("three");
+const { MeshBasicMaterial } = require("three");
+const { Mesh } = require("three");
 const { Vector3 } = require("three");
 const { PerspectiveCamera } = require("three");
 
@@ -6,8 +12,12 @@ const { PerspectiveCamera } = require("three");
  * @param {THREE.Scene} scene 
  * @returns {THREE.Camera}
  */
-function initializeCamera(/*scene*/) {
+function initializeCamera(scene) {
     const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
+    const coordinatePlane = new Mesh( new PlaneGeometry(1,1), new MeshBasicMaterial({color: 0xffffff, side: DoubleSide}) );
+    const raycaster = new Raycaster();
+    scene.add( coordinatePlane );
+    coordinatePlane.position.set(0, 0, 0);
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.005;
     let leftMouseDown = false;
@@ -15,15 +25,21 @@ function initializeCamera(/*scene*/) {
     let nextClickIsDouble = false;
 
     let cameraFocusPoint = new Vector3(0, 0, 0);
-    let defaultZoomRadius = 3;
-    let cameraPositionVector = new Vector3(defaultZoomRadius, ONE_DEGREE*90, 0);
+    let defaultZoomRadius = 4.5;
+    let cameraPositionVector = new Vector3(defaultZoomRadius, ONE_DEGREE * 50, 0);
 
     updateCamera();
 
-    function calculateOrbitalCoordinates(rplVector) {
-        const radius = rplVector.x;
-        const phi = rplVector.y;
-        const lambda = rplVector.z;
+    function calculateOrbitalCoordinates() {
+        if (cameraPositionVector.y > Math.PI){
+            cameraPositionVector.y = Math.PI;
+        }
+        else if (cameraPositionVector.y < 0){
+            cameraPositionVector.y = 0;
+        }
+        const radius = cameraPositionVector.x;
+        const phi = cameraPositionVector.y;
+        const lambda = cameraPositionVector.z;
         return new Vector3(
             radius * Math.cos(phi) * Math.cos(lambda) + cameraFocusPoint.x,
             radius * Math.sin(phi) + cameraFocusPoint.y,
@@ -33,10 +49,10 @@ function initializeCamera(/*scene*/) {
 
 
     function updateCamera() {
-        let cameraPosition = calculateOrbitalCoordinates(cameraPositionVector);
+        let cameraPosition = calculateOrbitalCoordinates();
         camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
         camera.lookAt(cameraFocusPoint);
-
+        coordinatePlane.rotation.set(0, cameraPositionVector.z - Math.PI / 2, 0);
     }
 
 
@@ -54,7 +70,7 @@ function initializeCamera(/*scene*/) {
         e.preventDefault();
         if (nextClickIsDouble) {
             cameraFocusPoint = new Vector3(0, 0, 0);
-            cameraPositionVector = new Vector3(defaultZoomRadius, Math.PI/2, Math.PI/2);
+            cameraPositionVector = new Vector3(defaultZoomRadius, Math.PI / 2, Math.PI / 2);
             updateCamera();
         }
         window.setTimeout(() => { nextClickIsDouble = false }, 200);
@@ -74,10 +90,10 @@ function initializeCamera(/*scene*/) {
         }
     }
 
-    function limit(x, limit=0.1){
-        if(x<limit && x>-limit){
+    function limit(x, limit = 0.001) {
+        if (x < limit && x > -limit) {
             return 0;
-        }else{
+        } else {
             return x;
         }
     }
@@ -87,16 +103,23 @@ function initializeCamera(/*scene*/) {
      */
     function handleCamera(e) {
         if (leftMouseDown) {
-            const lambda = limit(cameraPositionVector.z);
-            const sinL = limit(Math.sin(lambda));
-            
-            var movement = new Vector3(
-                limit(Math.sign(e.movementX)*sinL, 0.71 ) + limit(Math.sign(e.movementY)*limit(Math.cos(Math.PI - lambda) ), 0.71),
-                0,
-                limit(Math.sign(e.movementY)*sinL, 0.71) + limit ( Math.sign(e.movementX)*limit(Math.cos(Math.PI - lambda) ), 0.71 )
-            );
+            // ! ESKİ METOT 
+            // const lambda = limit(cameraPositionVector.z);
+            // const sinL = limit(Math.sin(lambda));
+            // let movement = new Vector3(
+            //     e.movementX * Math.cos(lambda) * CAMERA_STEP +
+            //     -e.movementY * Math.sin(lambda) * CAMERA_STEP,
+            //     0,
+            //     -e.movementY * Math.cos(lambda) * CAMERA_STEP +
+            //     e.movementX * Math.sin(lambda) * CAMERA_STEP
+            // );
+            // movement.set(limit(movement.x), limit(movement.y), limit(movement.z));
 
-            movement = movement.multiply(new Vector3(CAMERA_STEP, CAMERA_STEP, CAMERA_STEP));
+            // TODO: BURADA KAMERA ODAK NOKTASINI RELATİVE KOORDİNAT SİSTEMİNE GÖRE HAREKET ETTİRECEK MOVEMENT VEKTÖRÜ HESAPLANACAK
+            // TODO: HAREKET YÖNÜ e.movementX (mausun x axiste hareket miktarı) ve e.movementY tarafından belirlenecek
+            let movement = new Vector3();
+
+            // * BURASI HEP ÇAĞIRILCAK:
             cameraFocusPoint.add(movement);
             updateCamera();
         } else if (rightMouseDown) {
