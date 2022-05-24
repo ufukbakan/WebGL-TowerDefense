@@ -16,8 +16,9 @@
   "license": "ISC",
   "dependencies": {
     "@types/jest": "^27.5.1",
+    "@types/three": "^0.140.0",
     "browserify": "^17.0.0",
-    "browserify-hmr": "^0.1.10",
+    "browserify-hmr": "^0.4.1",
     "browserify-livereload": "^1.0.10",
     "canvas": "^2.9.1",
     "concurrently": "^7.1.0",
@@ -29,6 +30,7 @@
     "open": "^8.4.0",
     "require": "^0.4.4",
     "three": "^0.140.0",
+    "timeout": "^0.2.1",
     "watchify": "^4.0.0"
   }
 }
