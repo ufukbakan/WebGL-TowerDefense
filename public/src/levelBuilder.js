@@ -1,5 +1,5 @@
 const { spawnEnemies } = require("./spawnEnemies");
-const HighResTimeout = require("./HighResTimeout");
+const { timeout } = require("timeout");
 
 let infoBox = document.createElement("div");
 let level = 0;
@@ -30,15 +30,11 @@ function simulateLevels(scene) {
 function countdownBeforeNextLevel(count) {
     infoBox.innerHTML = getCountdownBox(count).outerHTML;
     if (count > 1) {
-        new HighResTimeout(1000).start().then(
-            () => countdownBeforeNextLevel(count - 1)
-        );
+        timeout(1000, () => countdownBeforeNextLevel(count - 1));
         // ! set timeout ile laglı bir şekilde çalışıyor
         //setTimeout(() => countdownBeforeNextLevel(count - 1), 1000);
     } else {
-        new HighResTimeout(1000).start().then(
-            () => nextLevel()
-        );
+        timeout(1000, () => nextLevel());
         //setTimeout(() => nextLevel(), 1000);
     }
 }
@@ -68,16 +64,9 @@ function spawnLevelMobs(level, nSpawned) {
     let mobsOfLevel = typesOfMobsForEachLevel[level - 1];
     if (nSpawned >= mobsOfLevel.length) {
         // hepsi spawnlandı
-        console.log("no more spawn");
     } else {
-        console.log("spawn required");
         spawnEnemies(globalScene, mobsOfLevel[nSpawned], 1);
-        const timer = new HighResTimeout(1000);
-        timer.then(
-            () => spawnLevelMobs(level, nSpawned+1)
-        ).catch(
-            (e) => console.log(e)
-        );
+        timeout(1000, ()=> spawnLevelMobs(level, nSpawned+1));
     }
 }
 

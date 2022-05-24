@@ -28,10 +28,9 @@
     "jest-mock-fetch": "^2.0.5",
     "jsdom": "^19.0.0",
     "open": "^8.4.0",
-    "performance-now": "^2.1.0",
-    "raf": "^3.4.1",
     "require": "^0.4.4",
     "three": "^0.140.0",
+    "timeout": "^0.2.1",
     "watchify": "^4.0.0"
   }
 }

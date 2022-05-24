@@ -1,16 +1,17 @@
-const { modelPlacer } = require("./modelPlacer");
+const { modelPlacer, modelLoader } = require("./modelPlacer");
 
 class ClonableModels {
     constructor(scene) {
         this.scene = scene;
         this.MODELS = {};
         this.ASSETS_LOAD_POS = [0, -10, 0];
-        this.init();
     }
 
     async init() {
-        const boyModel = await modelPlacer(this.scene, "Boy", this.ASSETS_LOAD_POS, [0, 0, 0], [0.01, 0.01, 0.01], 1);
-        this.MODELS.boy = boyModel;
+        const boyModel = await modelLoader("Boy");
+        this.MODELS.Boy = boyModel;
+        const baseTowerModel = await modelLoader("BaseTower");
+        this.MODELS.BaseTower = baseTowerModel;
     }
 
     getModels() {

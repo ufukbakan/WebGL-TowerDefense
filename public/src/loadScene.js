@@ -15,7 +15,7 @@ async function loadScene(canvas = undefined) {
 	const renderer = new WebGLRenderer({ antialias: true, canvas: canvas });
 	const camera = initializeCamera();
 	clonableModels = new ClonableModels(scene);
-
+	await clonableModels.init();
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = PCFShadowMap;
 

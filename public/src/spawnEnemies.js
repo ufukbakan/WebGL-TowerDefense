@@ -3,9 +3,10 @@ const { BoxGeometry } = require("three");
 const { MeshBasicMaterial } = require("three");
 const { Mesh } = require("three");
 const { Vector2, Vector3 } = require("three");
+const { modelPlacer } = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
-const ENEMY_SPAWN_POS = new Vector3(-2, 0, -2);
+const ENEMY_SPAWN_POS = [-2, 0, -2];
 
 /**
  * 
@@ -15,21 +16,22 @@ const ENEMY_SPAWN_POS = new Vector3(-2, 0, -2);
  * @param {Number} hitPoint 
  */
 async function spawnEnemies(scene, type, count, hitPoint) {
-    const { getClonableModels } = require("./loadScene");
     if (count > 0) {
         /** @type {THREE.Object3D} */ let model;
         if (type == 0) {
-            model = getClonableModels().boy.clone();
-            model.position.set(ENEMY_SPAWN_POS.x, ENEMY_SPAWN_POS.y, ENEMY_SPAWN_POS.z);
-            scene.add(model);
+            model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01], 1);
             model.name = "enemy_boy";
+            
             model.userData.currentHitPoint = hitPoint;
             model.userData.maxHitPoint = hitPoint;
             createHpBar(model, "green");
+            
             model.userData.speed = 0.033;
             model.userData.rotatedAlready = [];
             model.userData.update = updateEnemy.bind(null, model);
             model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
+
+            scene.add(model);
         }
         setTimeout(() => spawnEnemies(scene, type, count - 1, hitPoint), 500);
     }
