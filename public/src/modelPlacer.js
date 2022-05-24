@@ -1,7 +1,9 @@
+const { Cache } = require("three");
 const { GLTFLoader } = require("./GLTFLoader");
 const { fixLights } = require("./lightTransformation");
 
 const loader = new GLTFLoader();
+Cache.enabled = true;
 
 /**
  * @param {THREE.Scene} scene 
@@ -9,12 +11,6 @@ const loader = new GLTFLoader();
  * @param {Array} pos 
  * @param {Array} rot 
  */
-
-var scenes = {
-    mainScene: undefined
-};
-
-//hala scene alıyor belki başka bir şeyde kullanılır diye
 async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], name) {
     const gltfData = await loader.loadAsync("\\src\\Assets\\" + path + ".gltf");
     /** @type{THREE.Object3D} */const model = gltfData.scene;
@@ -25,11 +21,10 @@ async function modelPlacer(scene, path, pos, rot = [0, 0, 0], sca = [1, 1, 1], n
     model.scale.set(sca[0], sca[1], sca[2]);
     model.name = name;
 
-    scenes.mainScene.add(model);
+    scene.add(model);
 
-    fixLights(scenes.mainScene);
-
+    fixLights(scene);
     return model;
 }
 
-module.exports = { modelPlacer, scenes };
+module.exports = { modelPlacer };

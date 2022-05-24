@@ -1,21 +1,21 @@
-const { MeshBasicMaterial } = require("three");
-const { BoxGeometry } = require("three");
-const { Mesh } = require("three");
 const detectCollisions = require("./collisionDetector");
-const loadScene  = require("./loadScene");
-const { lastPicked } = require("./pickingObject");
-
+const { loadScene }  = require("./loadScene.js");
 
 window.addEventListener("load", init);
 
 async function init() {
 	let last_time = 0;
 
-	const [scene, renderer, camera, hudScene, hudCamera] = await loadScene();
+	const root = document.getElementById("root");
+	const canvas = document.createElement("canvas");
+	canvas.width = document.body.clientWidth;
+	canvas.height = window.innerHeight;
+	canvas.style.maxWidth = canvas.width + "px !important";
+	root.appendChild(canvas);
+	const [scene, renderer, camera, hudScene, hudCamera] = await loadScene(canvas);
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animation);
-	document.body.appendChild(renderer.domElement);
 
 	renderer.autoClear = false;
 
