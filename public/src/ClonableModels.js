@@ -4,7 +4,6 @@ class ClonableModels {
     constructor(scene) {
         this.scene = scene;
         this.MODELS = {};
-        this.ASSETS_LOAD_POS = [0, -10, 0];
     }
 
     async init() {
