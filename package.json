@@ -28,6 +28,7 @@
     "jest-mock-fetch": "^2.0.5",
     "jsdom": "^19.0.0",
     "open": "^8.4.0",
+    "precision-timeout-interval": "^1.0.0",
     "process-timer": "^1.0.2",
     "require": "^0.4.4",
     "three": "^0.140.0",
