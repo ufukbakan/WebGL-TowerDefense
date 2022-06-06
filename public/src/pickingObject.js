@@ -56,6 +56,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
                     }
                 })
                 placing.originalMaterial = originalMaterials;
+                window.removeEventListener("click", hudClickHandler);
                 window.addEventListener("mousemove", objectTrackCursor);
                 window.addEventListener("click", placeObjectToCursor);
             }
@@ -79,6 +80,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
             placing.object = undefined;
             window.removeEventListener("click", placeObjectToCursor);
             window.removeEventListener("mousemove", objectTrackCursor);
+            window.addEventListener("click", hudClickHandler);
         }
     }
 
