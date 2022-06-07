@@ -1,18 +1,10 @@
-const { DoubleSide } = require("three");
-const { BoxGeometry } = require("three");
-const { Raycaster } = require("three");
-const { PlaneGeometry } = require("three");
-const { MeshBasicMaterial } = require("three");
-const { Mesh } = require("three");
 const { Vector3 } = require("three");
 const { PerspectiveCamera } = require("three");
 
 /**
- * 
- * @param {THREE.Scene} scene 
  * @returns {THREE.Camera}
  */
-function initializeCamera(scene) {
+function initializeCamera() {
     const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.005;
@@ -82,14 +74,6 @@ function initializeCamera(scene) {
         }
         if (e.button == 2) {
             rightMouseDown = !rightMouseDown;
-        }
-    }
-
-    function limit(x, limit = 0.001) {
-        if (x < limit && x > -limit) {
-            return 0;
-        } else {
-            return x;
         }
     }
 

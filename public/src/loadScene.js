@@ -13,7 +13,7 @@ async function loadScene(canvas = undefined) {
 	const scene = new Scene();
 	scene.name = "WorldScene"
 	const renderer = new WebGLRenderer({ antialias: true, canvas: canvas });
-	const camera = initializeCamera(scene);
+	const camera = initializeCamera();
 	clonableModels = new ClonableModels(scene);
 	await clonableModels.init();
 	renderer.shadowMap.enabled = true;
