@@ -1,4 +1,4 @@
-const { modelPlacer, modelLoader } = require("./modelPlacer");
+const { modelLoader } = require("./modelPlacer");
 
 class ClonableModels {
     constructor(scene) {
@@ -11,6 +11,8 @@ class ClonableModels {
         this.MODELS.Boy = boyModel;
         const baseTowerModel = await modelLoader("BaseTower");
         this.MODELS.BaseTower = baseTowerModel;
+        const turret0Model = await modelLoader("Turret0");
+        this.MODELS.Turret0 = turret0Model;
     }
 
     getModels() {

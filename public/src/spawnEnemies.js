@@ -13,27 +13,27 @@ const ENEMY_SPAWN_POS = [-2, 0, -2];
  * @param {THREE.Scene} scene 
  * @param {Number} type 
  * @param {Number} count 
- * @param {Number} hitPoint 
  */
-async function spawnEnemies(scene, type, count, hitPoint) {
+async function spawnEnemies(scene, type, count) {
     if (count > 0) {
         /** @type {THREE.Object3D} */ let model;
         if (type == 0) {
-            model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01], 1);
+            model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             model.name = "enemy_boy";
             
-            model.userData.currentHitPoint = hitPoint;
-            model.userData.maxHitPoint = hitPoint;
+            model.userData.maxHitPoint = 100;
+            model.userData.currentHitPoint = model.userData.maxHitPoint;
             createHpBar(model, "green");
             
-            model.userData.speed = 0.033;
+            model.userData.speed = 0.009;
             model.userData.rotatedAlready = [];
             model.userData.update = updateEnemy.bind(null, model);
+            model.userData.takeDamage = takeDamage.bind(null, model);
             model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
 
             scene.add(model);
         }
-        setTimeout(() => spawnEnemies(scene, type, count - 1, hitPoint), 500);
+        setTimeout(() => spawnEnemies(scene, type, count - 1), 500);
     }
 }
 
@@ -54,10 +54,12 @@ function createHpBar(enemy, color) {
  * @param {Number} damage 
  * @param {Object3D} obj
  */
-function getDamage(obj, damage) {
+function takeDamage(obj, damage) {
     if (obj.userData.currentHitPoint <= damage) {
+        const { decreaseRemainingMobs } = require("./levelBuilder");
         obj.userData.currentHitPoint = 0;
         obj.removeFromParent();
+        decreaseRemainingMobs();
     }
     else {
         obj.userData.currentHitPoint -= damage

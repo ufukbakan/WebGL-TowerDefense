@@ -1,12 +1,17 @@
 const { spawnEnemies } = require("./spawnEnemies");
 const { prcTimeout } = require("precision-timeout-interval");
+const { addCoins } = require("./turretShop");
 
 let infoBox = document.createElement("div");
-let level = 0;
-let remainingMobs = 0;
+let coinBox = document.createElement("div");
+coinBox.classList.add("coin-box");
 infoBox.classList.add("info-box");
 const ui = document.querySelector("#ui");
 ui.appendChild(infoBox);
+ui.appendChild(coinBox);
+
+let level = 0;
+let remainingMobs = 0;
 const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
@@ -20,7 +25,7 @@ var globalScene;
  */
 function simulateLevels(scene) {
     globalScene = scene;
-    countdownBeforeNextLevel(2);
+    countdownBeforeNextLevel(15);
 }
 
 /**
@@ -66,7 +71,7 @@ function spawnLevelMobs(level, nSpawned) {
         // hepsi spawnlandı
     } else {
         spawnEnemies(globalScene, mobsOfLevel[nSpawned], 1);
-        prcTimeout(1000, ()=> spawnLevelMobs(level, nSpawned+1));
+        prcTimeout(500, ()=> spawnLevelMobs(level, nSpawned+1));
     }
 }
 
@@ -74,7 +79,8 @@ function decreaseRemainingMobs() {
     remainingMobs -= 1;
     updateLevelInfo();
     if (remainingMobs == 0) {
-        countdownBeforeNextLevel(3);
+        addCoins(level*100);
+        countdownBeforeNextLevel(10);
     }
 }
 

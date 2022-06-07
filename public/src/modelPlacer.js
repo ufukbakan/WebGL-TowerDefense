@@ -16,6 +16,7 @@ Cache.enabled = true;
 async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName=undefined) {
     const { getClonableModels } = require("./loadScene");
     let model = getClonableModels()[modelName].clone();
+    model.userData.type = modelName;
     model.position.set(pos[0], pos[1], pos[2]);
     model.rotation.set(rot[0], rot[1], rot[2]);
     model.userData.direction = model.rotation.y * Math.PI / 180;

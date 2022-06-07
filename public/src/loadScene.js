@@ -38,6 +38,7 @@ async function loadScene(canvas = undefined) {
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 
 	const base = await modelPlacer(scene, "BaseTower", [-4, 0, 2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
+	base.userData.hp = 100;
 	base.name = "Base";
 	lightTransforms(scene);
 	simulateLevels(scene);

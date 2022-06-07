@@ -1,6 +1,8 @@
 const { MeshBasicMaterial } = require("three");
 const { Raycaster } = require("three");
 const { modelPlacer } = require("./modelPlacer");
+const { initTurret, drawRange } = require("./turretInitializer");
+const { buyTurret } = require("./turretShop");
 
 var placing = {
     object: undefined,
@@ -37,7 +39,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
         let intersections = raycaster.intersectObjects(hudScene.children);
         if (intersections.length) {
             let picked = intersections[0].object;
-            if (picked.userData.content) {
+            if (picked.userData.ref && buyTurret(picked.userData.ref)) {
                 raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
                 intersections = raycaster.intersectObjects(mainScene.children);
                 let groundIntersection = intersections.find(x => x.object.name == "Ground");
@@ -45,7 +47,8 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
                 if (groundIntersection) {
                     position = [groundIntersection.point.x, 0, groundIntersection.point.z];
                 }
-                placing.object = await modelPlacer(mainScene, picked.userData.content, position, [0, 0, 0], [0.01, 0.01, 0.01], "turret");
+                placing.object = await modelPlacer(mainScene, picked.userData.ref, position, [0, 0, 0], [0.01, 0.01, 0.01], picked.userData.ref);
+                drawRange(placing.object, mainScene);
                 let originalMaterials = [];
                 let n = 0;
                 placing.object.traverse(m => {
@@ -69,7 +72,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 
         let groundIntersection = intersections.find(intersection => intersection.object.name == "Ground");
         let forbiddenIntersection = intersections.find(intersection => intersection.object.name.includes("forbidden") ||
-            (!isChildOfPlacing(intersection.object) && intersection.object.name.includes("turret")));
+            (!isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
 
         if (groundIntersection && !forbiddenIntersection && placing.object) {
             placing.object.traverse((x) => {
@@ -77,6 +80,8 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
                     x.material = placing.originalMaterial.shift();
                 }
             })
+            const turretReference = placing.object;
+            initTurret(turretReference, mainScene);
             placing.object = undefined;
             window.removeEventListener("click", placeObjectToCursor);
             window.removeEventListener("mousemove", objectTrackCursor);
@@ -105,7 +110,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 
             let groundIntersection = intersections.find(x => x.object.name == "Ground")
             let forbiddenIntersection = intersections.find(intersection => intersection.object.name.includes("forbidden") ||
-                ( !isChildOfPlacing(intersection.object) && intersection.object.name.includes("turret")));
+                ( !isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
 
             if (groundIntersection) {
                 if (forbiddenIntersection && !placing.lastColorIsRed) {

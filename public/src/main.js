@@ -1,5 +1,5 @@
 const detectCollisions = require("./collisionDetector");
-const { loadScene }  = require("./loadScene.js");
+const { loadScene } = require("./loadScene.js");
 
 window.addEventListener("load", init);
 
@@ -23,13 +23,17 @@ async function init() {
 		const deltaTime = (time - last_time) / 10;
 		last_time = time;
 
-		scene.traverse(
-			(obj)=>{
-				if(obj.userData.update){
-					obj.userData.update(deltaTime);
+		try {
+			scene.traverse(
+				(obj) => {
+					if (obj.userData.update) {
+						obj.userData.update(deltaTime);
+					}
 				}
-			}
-		);
+			);
+		}catch(e){
+
+		}
 		detectCollisions(scene);
 
 		renderer.clear();
