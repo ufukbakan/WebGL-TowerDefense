@@ -14,10 +14,6 @@ const { PerspectiveCamera } = require("three");
  */
 function initializeCamera(scene) {
     const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
-    const coordinatePlane = new Mesh( new PlaneGeometry(1,1), new MeshBasicMaterial({color: 0xffffff, side: DoubleSide}) );
-    const raycaster = new Raycaster();
-    scene.add( coordinatePlane );
-    coordinatePlane.position.set(0, 0, 0);
     const ONE_DEGREE = Math.PI / 180;
     const CAMERA_STEP = 0.005;
     let leftMouseDown = false;
@@ -52,7 +48,6 @@ function initializeCamera(scene) {
         let cameraPosition = calculateOrbitalCoordinates();
         camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
         camera.lookAt(cameraFocusPoint);
-        coordinatePlane.rotation.set(0, cameraPositionVector.z - Math.PI / 2, 0);
     }
 
 
