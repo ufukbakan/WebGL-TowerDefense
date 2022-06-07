@@ -1,20 +1,21 @@
 const { lightTransforms } = require("./lightTransformation");
-const { PointLight, PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
-const hudScreen = require("./hudScreen");
+const { PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
 const initializeCamera = require("./initializeCamera");
-const { modelPlacer, scenes } = require("./modelPlacer");
+const { modelPlacer } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
-const { pickingObject } = require("./pickingObject");
-const { spawnEnemies } = require("./spawnEnemies");
+const { simulateLevels } = require("./levelBuilder");
+const {hudScreen} = require("./hudScreen");
+const { ClonableModels } = require("./ClonableModels")
 
+let clonableModels;
 
 async function loadScene(canvas = undefined) {
 	const scene = new Scene();
 	scene.name = "WorldScene"
 	const renderer = new WebGLRenderer({ antialias: true, canvas: canvas });
-	const camera = initializeCamera(scene);
-	scenes.mainScene = scene;
-
+	const camera = initializeCamera();
+	clonableModels = new ClonableModels(scene);
+	await clonableModels.init();
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = PCFShadowMap;
 
@@ -34,14 +35,19 @@ async function loadScene(canvas = undefined) {
 	scene.add(ground);
 
 	initPaths(scene);
-	spawnEnemies(scene, 0, 1);
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 
-	const base = await modelPlacer(scene, "BaseTower", [0, 0, -2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
+	const base = await modelPlacer(scene, "BaseTower", [-4, 0, 2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
+	base.userData.hp = 100;
 	base.name = "Base";
 	lightTransforms(scene);
+	simulateLevels(scene);
 
 	return [scene, renderer, camera, hudScene, hudCamera];
 }
 
-module.exports = loadScene;
+function getClonableModels(){
+	return clonableModels.getModels();
+}
+
+module.exports = {loadScene, getClonableModels};

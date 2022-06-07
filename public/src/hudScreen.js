@@ -1,9 +1,6 @@
 const { Texture } = require("three");
 const { PlaneGeometry } = require("three");
-const { CameraHelper } = require("three");
-const { Color } = require("three");
 const { Object3D } = require("three");
-const { PointLight } = require("three");
 const { Mesh } = require("three");
 const { MeshBasicMaterial } = require("three");
 const { Scene } = require("three");
@@ -23,16 +20,17 @@ function hudScreen(renderer, mainScene, mainCamera) {
         canvas.height * 5, -canvas.height * 5,
         0, 100);
 
-    hudCamera.position.set(0, 0, 10);
+    hudCamera.position.set(0, 0, 1);
 
     var hudScene = new Scene();
     hudScene.name = "UIScene";
 
-    var element = createUIText(canvas, [-0.8, 0.3], [0.8, 0.4], "BaseTower", 50, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
-    var element1 = createUIText(canvas, [-0.8, 0], [0.8, 0.4], "BaseTower", 50, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
-    var element2 = createUIText(canvas, [-0.8, -0.3], [0.8, 0.4], "BaseTower", 50, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
+    var element = createUIText(canvas, [-0.8, 0.3], [0.8, 0.4], "Laser Turret", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "Turret0");
+    var element1 = createUIText(canvas, [-0.8, 0], [0.8, 0.4], "BaseTower", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "BaseTower");
+    var element2 = createUIText(canvas, [-0.8, -0.3], [0.8, 0.4], "BaseTower", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "BaseTower");
     var element3 = createUIBackground(canvas, [-0.8, 0], [1, 3], "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
-    var element4 = createUIText(canvas, [-0.8, 0.5], [0.8, 0.4], "Choose Tower", 50, "rgba(0,0,0,1)");
+    var element4 = createUIText(canvas, [-0.8, 0.5], [0.8, 0.4], "Place Turret", 150, "rgba(0,0,0,1)");
+    element4.userData.content = undefined;
     hudScene.add(element);
     hudScene.add(element1);
     hudScene.add(element2);
@@ -65,7 +63,7 @@ function clipToUI(canvas, obj, clipPosition) {
  * @param {HTMLCanvasElement} canvas 
  * @returns 
  */
-function createUIText(canvas, clipPosition, ratios, text, fontSize, fontColor, backGroundColor = undefined, borderColor = undefined) {
+function createUIText(canvas, clipPosition, ratios, text, fontSize, fontColor, backGroundColor = undefined, borderColor = undefined, ref=undefined) {
 
     let hudCanvas = document.createElement("canvas");
     let width = canvas.width * ratios[0] * 2;
@@ -106,7 +104,7 @@ function createUIText(canvas, clipPosition, ratios, text, fontSize, fontColor, b
 
     let planePos = clipToUI(canvas, hudPlane, clipPosition);
     hudPlane.position.set(planePos.x, planePos.y, 0);
-    hudPlane.userData.content = text;
+    hudPlane.userData.ref = ref;
 
     return hudPlane;
 }
@@ -149,4 +147,4 @@ function createUIBackground(canvas, clipPosition, ratios, backGroundColor, borde
     return hudPlane;
 }
 
-module.exports = hudScreen;
+module.exports = {hudScreen, createUIText};

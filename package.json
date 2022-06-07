@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/jest": "^27.5.1",
+    "@types/three": "^0.140.0",
     "browserify": "^17.0.0",
     "browserify-hmr": "^0.1.10",
     "browserify-livereload": "^1.0.10",
@@ -27,6 +28,8 @@
     "jest-mock-fetch": "^2.0.5",
     "jsdom": "^19.0.0",
     "open": "^8.4.0",
+    "precision-timeout-interval": "^1.0.0",
+    "process-timer": "^1.0.2",
     "require": "^0.4.4",
     "three": "^0.140.0",
     "watchify": "^4.0.0"
