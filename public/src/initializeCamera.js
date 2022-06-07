@@ -103,24 +103,7 @@ function initializeCamera(scene) {
      */
     function handleCamera(e) {
         if (leftMouseDown) {
-            // ! ESKİ METOT 
-            // const lambda = limit(cameraPositionVector.z);
-            // const sinL = limit(Math.sin(lambda));
-            // let movement = new Vector3(
-            //     e.movementX * Math.cos(lambda) * CAMERA_STEP +
-            //     -e.movementY * Math.sin(lambda) * CAMERA_STEP,
-            //     0,
-            //     -e.movementY * Math.cos(lambda) * CAMERA_STEP +
-            //     e.movementX * Math.sin(lambda) * CAMERA_STEP
-            // );
-            // movement.set(limit(movement.x), limit(movement.y), limit(movement.z));
-
-            // TODO: BURADA KAMERA ODAK NOKTASINI RELATİVE KOORDİNAT SİSTEMİNE GÖRE HAREKET ETTİRECEK MOVEMENT VEKTÖRÜ HESAPLANACAK
-            // TODO: HAREKET YÖNÜ e.movementX (mausun x axiste hareket miktarı) ve e.movementY tarafından belirlenecek
-            let movement = new Vector3();
-
-            // * BURASI HEP ÇAĞIRILCAK:
-            cameraFocusPoint.add(movement);
+            cameraFocusPoint.add( new Vector3(-1 * e.movementX * CAMERA_STEP ,1 * e.movementY * CAMERA_STEP,0).applyQuaternion(camera.quaternion).setY(0) );
             updateCamera();
         } else if (rightMouseDown) {
             cameraPositionVector.add(new Vector3(0, e.movementY * CAMERA_STEP, e.movementX * CAMERA_STEP));
