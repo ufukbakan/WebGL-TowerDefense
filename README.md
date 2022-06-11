@@ -2,5 +2,5 @@
 
 ```bash
 $ npm install
-$ npm start or npm _start
+$ npm start
 ```
