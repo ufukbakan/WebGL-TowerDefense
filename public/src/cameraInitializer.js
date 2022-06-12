@@ -19,10 +19,10 @@ function initializeCamera() {
     updateCamera();
 
     function calculateOrbitalCoordinates() {
-        if (cameraPositionVector.y > Math.PI){
+        if (cameraPositionVector.y > Math.PI) {
             cameraPositionVector.y = Math.PI;
         }
-        else if (cameraPositionVector.y < 0){
+        else if (cameraPositionVector.y < 0) {
             cameraPositionVector.y = 0;
         }
         const radius = cameraPositionVector.x;
@@ -82,7 +82,7 @@ function initializeCamera() {
      */
     function handleCamera(e) {
         if (leftMouseDown) {
-            cameraFocusPoint.add( new Vector3(-1 * e.movementX * CAMERA_STEP ,1 * e.movementY * CAMERA_STEP,0).applyQuaternion(camera.quaternion).setY(0) );
+            cameraFocusPoint.add(new Vector3(-1 * e.movementX * CAMERA_STEP, 1 * e.movementY * CAMERA_STEP, 0).applyQuaternion(camera.quaternion).setY(0));
             updateCamera();
         } else if (rightMouseDown) {
             cameraPositionVector.add(new Vector3(0, e.movementY * CAMERA_STEP, e.movementX * CAMERA_STEP));
@@ -95,8 +95,10 @@ function initializeCamera() {
      * @param {WheelEvent} e 
      */
     function zoom(e) {
-        cameraPositionVector.x += 0.1 * Math.sign(e.deltaY)// zoom radius 
-        updateCamera();
+        if (cameraPositionVector.x > 1 || e.deltaY > 0) {
+            cameraPositionVector.x += 0.75 * Math.sign(e.deltaY)// zoom radius 
+            updateCamera();
+        }
     }
 
     return camera;
