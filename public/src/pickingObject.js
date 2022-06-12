@@ -137,4 +137,4 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
     }
 }
 
-module.exports = { pickingObject, lastPicked: placing };
+module.exports = { pickingObject };

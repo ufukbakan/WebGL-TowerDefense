@@ -27,7 +27,7 @@ jest.mock("../GLTFLoader", ()=>{
     return {GLTFLoader};
 });
 
-const loadScene = require("../loadScene");
+const loadScene = require("../sceneLoader");
 jest.setTimeout(30000);
 
 beforeEach( ()=>{
