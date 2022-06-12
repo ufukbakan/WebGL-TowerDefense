@@ -25,11 +25,13 @@ function hudScreen(renderer, mainScene, mainCamera) {
 
     const header = createUIText(canvas, [-0.8, 0.3], [0.7, 0.2], "Place Turret", 280, "rgba(0,0,0,1)");
     const laserTurretText = createUIText(canvas, [-0.8, 0.2], [0.7, 0.2], "Laser Turret (50 Gold)", 200, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret0");
+    const blueLaserTurretText = createUIText(canvas, [-0.8, 0.1], [0.7, 0.2], "Blue Laser Turret (100 Gold)", 200, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret1");
     const uiBackground = createUIBackground(canvas, [-0.8, 0], [0.75, 2], "rgba(255,255,255,0.5)", "rgba(30,0,0,0.5)");
 
     header.userData.content = undefined;
     hudScene.add(header);
     hudScene.add(laserTurretText);
+    hudScene.add(blueLaserTurretText);
     hudScene.add(uiBackground);
 
     pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera);

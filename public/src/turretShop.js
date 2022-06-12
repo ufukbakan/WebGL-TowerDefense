@@ -7,7 +7,8 @@ ui.appendChild(coinBox);
 updateCoinBox();
 
 const prices = {
-    "Turret0": 50
+    "Turret0": 50,
+    "Turret1": 100
 }
 
 /**

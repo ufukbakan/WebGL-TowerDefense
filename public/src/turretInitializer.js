@@ -1,19 +1,23 @@
 const { prcTimeout } = require("precision-timeout-interval");
-const { Vector3, LineBasicMaterial, BufferGeometry, Line} = require("three");
+const { Vector3, LineBasicMaterial, BufferGeometry, Line, Box3} = require("three");
 
-const redLaserMaterial = new LineBasicMaterial({ color: 0xff0000 });
+const redLaserMaterial = new LineBasicMaterial({ color: 0xff0000, opacity: 0.85, transparent: true });
+const blueLaserMaterial = new LineBasicMaterial({ color: 0x0000ff, opacity: 0.85, transparent: true });
 const rangeMaterial = new LineBasicMaterial({
     color: "rgba(255,255,0,1)", linewidth: 5
 });
 
 const ranges = {
-    "Turret0": 4
+    "Turret0": 4,
+    "Turret1": 3
 }
 const damages = {
-    "Turret0": 50
+    "Turret0": 50,
+    "Turret1": 40
 }
 const reloadTimes = {
-    "Turret0": 1000
+    "Turret0": 1000,
+    "Turret1": 333
 }
 
 /**
@@ -21,15 +25,20 @@ const reloadTimes = {
  * @param {THREE.Scene} scene
  */
 function initTurret(turret, scene) {
-    if (turret.name.toLocaleLowerCase().includes("turret0")) {
-        const type = turret.userData.type;
-        turret.userData.update = turretLifeCycle.bind(null, turret, scene);
-        turret.userData.reloadTime = reloadTimes[type];
-        turret.userData.damage = damages[type];
-        turret.userData.canShoot = true;
-        turret.userData.range = ranges[type];
+    const type = turret.userData.type;
+    turret.userData.reloadTime = reloadTimes[type];
+    turret.userData.damage = damages[type];
+    turret.userData.canShoot = true;
+    turret.userData.range = ranges[type];
+
+    if (type == "Turret0") {
         turret.userData.shootMaterial = redLaserMaterial;
+    }else if(type == "Turret1"){
+        turret.userData.shootMaterial = blueLaserMaterial;
     }
+
+    turret.userData.turretHeight = new Box3().setFromObject(turret).max.y;
+    turret.userData.update = turretLifeCycle.bind(null, turret, scene);
 }
 
 /**
@@ -83,12 +92,12 @@ function turretLifeCycle(turret, scene) {
                         turret.userData.canShoot = false;
 
                         const points = [];
-                        points.push(turret.position.clone().add(new Vector3(0, 0.4, 0)));
+                        points.push(turret.position.clone().add(new Vector3(0, turret.userData.turretHeight - 0.05 , 0)));
                         points.push(obj.position.clone().add(new Vector3(0, 0.2, 0)));
                         const geometry = new BufferGeometry().setFromPoints(points);
                         const line = new Line(geometry, turret.userData.shootMaterial);
                         scene.add(line);
-                        prcTimeout(100, () => removeLaser(line));
+                        prcTimeout(50, () => removeLaser(line));
 
                         obj.userData.takeDamage(turret.userData.damage);
                         prcTimeout(turret.userData.reloadTime, () => reload(turret));
