@@ -10,12 +10,6 @@ async function init() {
 	const canvas = document.createElement("canvas");
 	canvas.width = document.body.clientWidth;
 	canvas.height = window.innerHeight;
-	window.addEventListener("resize", ()=>{
-		canvas.width = document.body.clientWidth;
-		canvas.height = window.innerHeight;
-		canvas.style.width = canvas.width + "px";
-		canvas.style.height = canvas.height + "px";
-	})
 	root.appendChild(canvas);
 	const [scene, renderer, camera, hudScene, hudCamera] = await loadScene(canvas);
 
