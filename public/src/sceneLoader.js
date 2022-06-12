@@ -1,6 +1,6 @@
 const { lightTransforms } = require("./lightTransformation");
 const { PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
-const initializeCamera = require("./initializeCamera");
+const initializeCamera = require("./cameraInitializer");
 const { modelPlacer } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
 const { simulateLevels } = require("./levelBuilder");
@@ -23,7 +23,7 @@ async function loadScene(canvas = undefined) {
 
 	const textureLoader = new TextureLoader();
 
-	let groundTexture = textureLoader.load("/src/Assets/grass2.jpg");
+	let groundTexture = textureLoader.load("/src/Assets/grass.jpg");
 	groundTexture.repeat.set(10, 10);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;

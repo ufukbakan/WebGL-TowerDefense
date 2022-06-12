@@ -1,8 +1,20 @@
-const { Mesh } = require("three");
+const { Mesh, TextureLoader, MeshLambertMaterial, RepeatWrapping, MirroredRepeatWrapping, ClampToEdgeWrapping } = require("three");
 const { Vector3 } = require("three");
 const { MeshBasicMaterial } = require("three");
 const { BoxGeometry } = require("three");
 const { Group } = require("three")
+
+const textureLoader = new TextureLoader();
+const roadTexture_x = textureLoader.load("/src/Assets/stone-road.jpg");
+const roadTexture_y = textureLoader.load("/src/Assets/stone-road.jpg");
+roadTexture_x.wrapS = MirroredRepeatWrapping;
+roadTexture_x.wrapT = MirroredRepeatWrapping;
+roadTexture_y.wrapS = MirroredRepeatWrapping;
+roadTexture_y.wrapT = MirroredRepeatWrapping;
+roadTexture_x.repeat.set(20, 2);
+roadTexture_y.repeat.set(2, 20);
+const roadMaterial_x =  new MeshLambertMaterial({ map: roadTexture_x});
+const roadMaterial_y =  new MeshLambertMaterial({ map: roadTexture_y});
 
 /**
  * 
@@ -26,18 +38,18 @@ function placeRotators(scene) {
  * @param {THREE.Scene} scene 
  */
  function placeForbiddenPath(scene) {
-    const mesh_height = 0.05;
+    const mesh_height = 0.001;
     let forbiddenPathGroup = new Group();
     forbiddenPathGroup.name = "forbidden";
-    let forbiddenPath1 =  new Mesh(new BoxGeometry(8,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0.5, transparent: true}));
+    let forbiddenPath1 =  new Mesh(new BoxGeometry(8,mesh_height,1), roadMaterial_x );
     forbiddenPath1.name = "forbidden";
     forbiddenPath1.position.set(0, mesh_height/2, -2);
 
-    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,8), new MeshBasicMaterial({color: 0xff0000, opacity:0.5, transparent: true}));
+    let forbiddenPath2 =  new Mesh(new BoxGeometry(1,mesh_height,8), roadMaterial_y );
     forbiddenPath2.name = "forbidden";
-    forbiddenPath2.position.set(2, mesh_height/2, 0);
+    forbiddenPath2.position.set(2, mesh_height/2 + 0.001, 0);
 
-    let forbiddenPath3 =  new Mesh(new BoxGeometry(8,mesh_height,1), new MeshBasicMaterial({color: 0xff0000, opacity:0.5, transparent: true}));
+    let forbiddenPath3 =  new Mesh(new BoxGeometry(8,mesh_height,1), roadMaterial_x );
     forbiddenPath3.name = "forbidden";
     forbiddenPath3.position.set(0, mesh_height/2, 2);
 

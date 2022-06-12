@@ -1,5 +1,5 @@
 const detectCollisions = require("./collisionDetector");
-const { loadScene } = require("./loadScene.js");
+const { loadScene } = require("./sceneLoader.js");
 
 window.addEventListener("load", init);
 

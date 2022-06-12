@@ -79,7 +79,7 @@ function decreaseRemainingMobs() {
     remainingMobs -= 1;
     updateLevelInfo();
     if (remainingMobs == 0) {
-        addCoins(level*100);
+        addCoins(level*50);
         countdownBeforeNextLevel(10);
     }
 }

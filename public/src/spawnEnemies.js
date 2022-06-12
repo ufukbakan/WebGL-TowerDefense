@@ -6,7 +6,7 @@ const { Vector2, Vector3 } = require("three");
 const { modelPlacer } = require("./modelPlacer");
 
 const ONE_DEGREE = Math.PI / 180;
-const ENEMY_SPAWN_POS = [-2, 0, -2];
+const ENEMY_SPAWN_POS = [-4, 0, -2];
 
 /**
  * 

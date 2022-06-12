@@ -14,7 +14,7 @@ Cache.enabled = true;
  * @param {String} objectName
  */
 async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName=undefined) {
-    const { getClonableModels } = require("./loadScene");
+    const { getClonableModels } = require("./sceneLoader");
     let model = getClonableModels()[modelName].clone();
     model.userData.type = modelName;
     model.position.set(pos[0], pos[1], pos[2]);
