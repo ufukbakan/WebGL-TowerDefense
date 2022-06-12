@@ -14,28 +14,23 @@ const { pickingObject } = require("./pickingObject");
  * @param {THREE.Renderer} renderer 
  */
 function hudScreen(renderer, mainScene, mainCamera) {
-    var canvas = renderer.domElement;
+    const canvas = renderer.domElement;
 
-    var hudCamera = new OrthographicCamera(-canvas.width * 5, canvas.width * 5,
-        canvas.height * 5, -canvas.height * 5,
-        0, 100);
+    const hudCamera = new OrthographicCamera(-canvas.width * 5, canvas.width * 5, canvas.height * 5, -canvas.height * 5, 0, 100);
 
     hudCamera.position.set(0, 0, 1);
 
-    var hudScene = new Scene();
+    const hudScene = new Scene();
     hudScene.name = "UIScene";
 
-    var element = createUIText(canvas, [-0.8, 0.3], [0.8, 0.4], "Laser Turret", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "Turret0");
-    var element1 = createUIText(canvas, [-0.8, 0], [0.8, 0.4], "BaseTower", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "BaseTower");
-    var element2 = createUIText(canvas, [-0.8, -0.3], [0.8, 0.4], "BaseTower", 150, "rgba(0,0,0,1)", "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)", "BaseTower");
-    var element3 = createUIBackground(canvas, [-0.8, 0], [1, 3], "rgba(100,0,0,0.5)", "rgba(30,0,0,0.5)");
-    var element4 = createUIText(canvas, [-0.8, 0.5], [0.8, 0.4], "Place Turret", 150, "rgba(0,0,0,1)");
-    element4.userData.content = undefined;
-    hudScene.add(element);
-    hudScene.add(element1);
-    hudScene.add(element2);
-    hudScene.add(element3);
-    hudScene.add(element4);
+    const header = createUIText(canvas, [-0.8, 0.3], [0.7, 0.2], "Place Turret", 280, "rgba(0,0,0,1)");
+    const laserTurretText = createUIText(canvas, [-0.8, 0.2], [0.7, 0.2], "Laser Turret (50 Gold)", 200, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret0");
+    const uiBackground = createUIBackground(canvas, [-0.8, 0], [0.75, 2], "rgba(255,255,255,0.5)", "rgba(30,0,0,0.5)");
+
+    header.userData.content = undefined;
+    hudScene.add(header);
+    hudScene.add(laserTurretText);
+    hudScene.add(uiBackground);
 
     pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera);
     return [hudScene, hudCamera]
