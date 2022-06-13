@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"watchify public\\src\\main.js -o public\\out\\main.js -p [browserify-livereload --host 127.0.0.1 --port 8080]\" \"node index.js\"",
     "_start": "start /b watchify public\\src\\main.js -o public\\out\\main.js -p browserify-hmr && node index.js",
-    "build": "browserify public/src/main.js -o public/out/main.js",
+    "build": "rm -rf node_modules/ && npm install && browserify public/src/main.js -o public/out/main.js",
     "test": "jest --silent --coverage"
   },
   "repository": {
