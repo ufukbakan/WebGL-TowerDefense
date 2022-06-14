@@ -25,7 +25,7 @@ async function loadScene(canvas = undefined) {
 
 	const textureLoader = new TextureLoader();
 
-	let groundTexture = textureLoader.load("/assets/grass.jpg");
+	let groundTexture = textureLoader.load("./assets/grass.jpg");
 	groundTexture.repeat.set(10, 10);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;

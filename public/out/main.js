@@ -43205,7 +43205,7 @@ async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 
  * @returns {THREE.Object3D}
  */
 async function modelLoader(name){
-    const gltfData = await loader.loadAsync("/assets/" + name + ".gltf");
+    const gltfData = await loader.loadAsync("./assets/" + name + ".gltf");
     return gltfData.scene;
 }
 
@@ -43218,8 +43218,8 @@ const { BoxGeometry } = require("three");
 const { Group } = require("three")
 
 const textureLoader = new TextureLoader();
-const roadTexture_x = textureLoader.load("/assets/stone-road.jpg");
-const roadTexture_y = textureLoader.load("/assets/stone-road.jpg");
+const roadTexture_x = textureLoader.load("./assets/stone-road.jpg");
+const roadTexture_y = textureLoader.load("./assets/stone-road.jpg");
 roadTexture_x.wrapS = MirroredRepeatWrapping;
 roadTexture_x.wrapT = MirroredRepeatWrapping;
 roadTexture_y.wrapS = MirroredRepeatWrapping;
@@ -43451,7 +43451,7 @@ async function loadScene(canvas = undefined) {
 
 	const textureLoader = new TextureLoader();
 
-	let groundTexture = textureLoader.load("/assets/grass.jpg");
+	let groundTexture = textureLoader.load("./assets/grass.jpg");
 	groundTexture.repeat.set(10, 10);
 	groundTexture.wrapS = RepeatWrapping;
 	groundTexture.wrapT = RepeatWrapping;

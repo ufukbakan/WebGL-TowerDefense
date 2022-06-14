@@ -39,7 +39,7 @@ async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 
  * @returns {THREE.Object3D}
  */
 async function modelLoader(name){
-    const gltfData = await loader.loadAsync("/assets/" + name + ".gltf");
+    const gltfData = await loader.loadAsync("./assets/" + name + ".gltf");
     return gltfData.scene;
 }
 

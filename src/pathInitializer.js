@@ -5,8 +5,8 @@ const { BoxGeometry } = require("three");
 const { Group } = require("three")
 
 const textureLoader = new TextureLoader();
-const roadTexture_x = textureLoader.load("/assets/stone-road.jpg");
-const roadTexture_y = textureLoader.load("/assets/stone-road.jpg");
+const roadTexture_x = textureLoader.load("./assets/stone-road.jpg");
+const roadTexture_y = textureLoader.load("./assets/stone-road.jpg");
 roadTexture_x.wrapS = MirroredRepeatWrapping;
 roadTexture_x.wrapT = MirroredRepeatWrapping;
 roadTexture_y.wrapS = MirroredRepeatWrapping;
