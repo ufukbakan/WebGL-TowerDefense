@@ -1,5 +1,5 @@
 describe('Index.html', () => {
-    const server = require("../../../index");
+    const server = require("../index");
 
     beforeAll(async () => {
         await page.goto('http://localhost:8080');
