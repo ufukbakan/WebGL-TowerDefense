@@ -3,12 +3,9 @@ const { prcTimeout } = require("precision-timeout-interval");
 const { addCoins } = require("./turretShop");
 
 let infoBox = document.createElement("div");
-let coinBox = document.createElement("div");
-coinBox.classList.add("coin-box");
 infoBox.classList.add("info-box");
 const ui = document.querySelector("#ui");
 ui.appendChild(infoBox);
-ui.appendChild(coinBox);
 
 let level = 0;
 let remainingMobs = 0;
