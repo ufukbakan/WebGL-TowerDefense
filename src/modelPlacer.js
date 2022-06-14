@@ -1,8 +1,12 @@
 const { Cache } = require("three");
+const { DRACOLoader } = require("./DRACOLoader");
 const { GLTFLoader } = require("./GLTFLoader");
 const { fixLights } = require("./lightTransformation");
 
 const loader = new GLTFLoader();
+const draco = new DRACOLoader();
+draco.setDecoderPath("./libs/draco/");
+loader.dracoLoader = draco;
 Cache.enabled = true;
 
 /**
