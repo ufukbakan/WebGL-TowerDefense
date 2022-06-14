@@ -34,4 +34,4 @@ jobs:
     - run: git checkout -b deploy
     - run: git add public/out/main.js -f
     - run: git commit -m "Automated deploy"
-    - run: git push
+    - run: git push origin deploy
