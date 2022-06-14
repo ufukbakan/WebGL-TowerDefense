@@ -14,10 +14,9 @@ app.use(express.static('public'));
 let server = app.listen(app.get('port'), function (err) {
   if (err) {
     console.log(err);
-  } else {
-    console.log('Running on port: ' + app.get('port'));
   }
-  if (NODE_ENV != "test") {
+  else if (NODE_ENV != "test") {
+    console.log('Running on port: ' + app.get('port'));
     open("http://localhost:" + PORT);
   }
 });
