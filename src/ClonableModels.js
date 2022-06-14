@@ -11,6 +11,8 @@ class ClonableModels {
         this.MODELS.Boy = boyModel;
         const baseTowerModel = await modelLoader("BaseTower");
         this.MODELS.BaseTower = baseTowerModel;
+        const gateModel = await modelLoader("Gate");
+        this.MODELS.Gate = gateModel;
         const turret0Model = await modelLoader("Turret0");
         this.MODELS.Turret0 = turret0Model;
         const turret1Model = await modelLoader("Turret1");

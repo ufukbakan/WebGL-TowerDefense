@@ -57,6 +57,34 @@ canvas{
     animation: warning-animation 1s steps(6);
 }
 
+#loading{
+    font-family: Consolas;
+    font-size: 36pt;
+    font-weight: bold;
+    position: absolute;
+    display: inline-block;
+    left: 40%;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 99;
+    animation: loading-animation infinite .5s steps(3);
+    width: auto;
+    overflow: hidden;
+}
+
+.hide{
+    display: none !important;
+}
+
+@keyframes loading-animation{
+    0%{
+        max-width: 8ch;
+    }
+    100%{
+        max-width: 11ch;
+    }
+}
+
 @keyframes countdown-animation {
     0%,100%{
         color: rgb(255, 208, 0);

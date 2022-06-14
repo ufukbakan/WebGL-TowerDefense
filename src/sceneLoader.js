@@ -18,6 +18,8 @@ async function loadScene(canvas = undefined) {
 	await clonableModels.init();
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = PCFShadowMap;
+	renderer.autoClear = false;
+	renderer.setSize(window.innerWidth, window.innerHeight);
 
 	scene.background = new Color("#000000");
 
@@ -37,9 +39,13 @@ async function loadScene(canvas = undefined) {
 	initPaths(scene);
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 
-	const base = await modelPlacer(scene, "BaseTower", [-4, 0, 2], [0, 0, 0], [0.01, 0.01, 0.01], 1);
+	const base = await modelPlacer(scene, "BaseTower", [-4, 0, 2], [0, 0, 0], [0.01, 0.01, 0.01]);
 	base.userData.hp = 100;
 	base.name = "Base";
+
+	const gate = await modelPlacer(scene, "Gate", [-4,0,-2], [0,Math.PI/2,0], [0.01, 0.01, 0.01]);
+	gate.name = "Gate";
+
 	lightTransforms(scene);
 	simulateLevels(scene);
 

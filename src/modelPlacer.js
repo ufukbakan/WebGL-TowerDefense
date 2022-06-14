@@ -12,6 +12,7 @@ Cache.enabled = true;
  * @param {Array} rot
  * @param {Array} sca
  * @param {String} objectName
+ * @returns {THREE.Object3D}
  */
 async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName=undefined) {
     const { getClonableModels } = require("./sceneLoader");

@@ -8,15 +8,16 @@ async function init() {
 
 	const root = document.getElementById("root");
 	const canvas = document.createElement("canvas");
+	const loading = document.getElementById("loading");
+
 	canvas.width = document.body.clientWidth;
 	canvas.height = window.innerHeight;
 	root.appendChild(canvas);
+	
 	const [scene, renderer, camera, hudScene, hudCamera] = await loadScene(canvas);
-
-	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animation);
 
-	renderer.autoClear = false;
+	loading.classList.add("hide");
 
 	function animation(time) {
 		const deltaTime = (time - last_time) / 10;
