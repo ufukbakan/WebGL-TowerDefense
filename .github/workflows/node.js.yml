@@ -31,7 +31,7 @@ jobs:
     - run: npm test
     
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
-      with:
-        branch: deploy # The branch the action should deploy to.
-        folder: public/out # The folder the action should deploy.
+    - run: git checkout -b deploy
+    - run: git add public/out/main.js -f
+    - run: git commit -m "Automated deploy"
+    - run: git push
