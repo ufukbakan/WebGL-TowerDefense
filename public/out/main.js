@@ -42834,16 +42834,19 @@ function hudScreen(renderer, mainScene, mainCamera) {
     const hudScene = new Scene();
     hudScene.name = "UIScene";
 
-    const header = createUIText(canvas, [-0.8, 0.3], [0.7, 0.2], "Place Turret", 280, "rgba(0,0,0,1)");
-    const laserTurretText = createUIText(canvas, [-0.8, 0.2], [0.7, 0.2], "Laser Turret (50 Gold)", 200, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret0");
-    const blueLaserTurretText = createUIText(canvas, [-0.8, 0.1], [0.7, 0.2], "Blue Laser Turret (100 Gold)", 200, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret1");
+    const header = createUIText(canvas, [-0.8, 0.3], [0.7, 0.2], "Place Turret", 175, "rgba(0,0,0,1)");
+    const laserTurretText = createUIText(canvas, [-0.8, 0.2], [0.7, 0.2], "Laser Turret (50 Gold)", 150, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret0");
+    const blueLaserTurretText = createUIText(canvas, [-0.8, 0.1], [0.7, 0.2], "Blue Laser Turret (100 Gold)", 150, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Turret1");
     const uiBackground = createUIBackground(canvas, [-0.8, 0], [0.75, 2], "rgba(255,255,255,0.5)", "rgba(30,0,0,0.5)");
+    const sellButton = createUIText(canvas, [-0.73, -0.3], [0.3, 0.2], "SELL", 150, "rgba(0,0,0,1)", "rgba(0,0,0,0.0)", "rgba(255,200,100,1)", "Sell");
+    
 
     header.userData.content = undefined;
     hudScene.add(header);
     hudScene.add(laserTurretText);
     hudScene.add(blueLaserTurretText);
     hudScene.add(uiBackground);
+    hudScene.add(sellButton);
 
     pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera);
     return [hudScene, hudCamera]
@@ -42965,13 +42968,13 @@ let infoBox = document.createElement("div");
 infoBox.classList.add("info-box");
 const ui = document.querySelector("#ui");
 ui.appendChild(infoBox);
+const loseWinUi = document.getElementById("lose-win-ui");
 
 let level = 0;
 let remainingMobs = 0;
 const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 ];
 var globalScene;
 
@@ -42989,14 +42992,19 @@ function simulateLevels(scene) {
  * @param {Number} count 
  */
 function countdownBeforeNextLevel(count) {
-    infoBox.innerHTML = getCountdownBox(count).outerHTML;
-    if (count > 1) {
-        prcTimeout(1000, ()=>countdownBeforeNextLevel(count - 1));
-        // ! set timeout ile laglı bir şekilde çalışıyor
-        //setTimeout(() => countdownBeforeNextLevel(count - 1), 1000);
+    if (!typesOfMobsForEachLevel[level]) {
+        loseWinUi.innerText = "YOU WON";
+        loseWinUi.classList.remove("hide");
     } else {
-        prcTimeout(1000, ()=>nextLevel());
-        //setTimeout(() => nextLevel(), 1000);
+        infoBox.innerHTML = getCountdownBox(count).outerHTML;
+        if (count > 1) {
+            prcTimeout(1000, () => countdownBeforeNextLevel(count - 1));
+            // ! set timeout ile laglı bir şekilde çalışıyor
+            //setTimeout(() => countdownBeforeNextLevel(count - 1), 1000);
+        } else {
+            prcTimeout(1000, () => nextLevel());
+            //setTimeout(() => nextLevel(), 1000);
+        }
     }
 }
 
@@ -43027,7 +43035,7 @@ function spawnLevelMobs(level, nSpawned) {
         // hepsi spawnlandı
     } else {
         spawnEnemies(globalScene, mobsOfLevel[nSpawned], 1);
-        prcTimeout(500, ()=> spawnLevelMobs(level, nSpawned+1));
+        prcTimeout(500, () => spawnLevelMobs(level, nSpawned + 1));
     }
 }
 
@@ -43035,13 +43043,13 @@ function decreaseRemainingMobs() {
     remainingMobs -= 1;
     updateLevelInfo();
     if (remainingMobs == 0) {
-        addCoins(level*50);
+        addCoins(level * 50);
         countdownBeforeNextLevel(10);
     }
 }
 
 module.exports = { simulateLevels, decreaseRemainingMobs };
-},{"./spawnEnemies":20,"./turretShop":22,"precision-timeout-interval":2}],14:[function(require,module,exports){
+},{"./spawnEnemies":20,"./turretShop":23,"precision-timeout-interval":2}],14:[function(require,module,exports){
 const { DirectionalLightHelper, CameraHelper, DirectionalLight } = require("three");
 
 
@@ -43054,6 +43062,11 @@ function fixLights(scene) {
             case "rotator":
                 break;
             case "forbidden":
+                obj.receiveShadow = true;
+                break;
+            case "healthBox":
+                obj.castShadow = false;
+                obj.receiveShadow= false;
                 break;
             default:
                 obj.castShadow = true;
@@ -43070,7 +43083,7 @@ function lightTransforms(scene) {
 
     fixLights(scene);
 
-    var light = new DirectionalLight("#fff");
+    var light = new DirectionalLight("#fff",2);
     light.position.y = 3;
     light.castShadow = true;
     light.target.position.set(0, 0, 0);
@@ -43174,6 +43187,8 @@ const draco = new DRACOLoader();
 draco.setDecoderPath("./libs/draco/");
 loader.dracoLoader = draco;
 Cache.enabled = true;
+const ONE_DEGREE = Math.PI / 180;
+
 
 /**
  * @param {THREE.Scene} scene 
@@ -43184,15 +43199,15 @@ Cache.enabled = true;
  * @param {String} objectName
  * @returns {THREE.Object3D}
  */
-async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName=undefined) {
+async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName = undefined) {
     const { getClonableModels } = require("./sceneLoader");
     let model = getClonableModels()[modelName].clone();
     model.userData.type = modelName;
     model.position.set(pos[0], pos[1], pos[2]);
-    model.rotation.set(rot[0], rot[1], rot[2]);
+    model.rotation.set(rot[0] * ONE_DEGREE, rot[1] * ONE_DEGREE, rot[2] * ONE_DEGREE);
     model.userData.direction = model.rotation.y * Math.PI / 180;
     model.scale.set(sca[0], sca[1], sca[2]);
-    if(objectName)
+    if (objectName)
         model.name = objectName;
 
     scene.add(model);
@@ -43204,7 +43219,7 @@ async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 
 /**
  * @returns {THREE.Object3D}
  */
-async function modelLoader(name){
+async function modelLoader(name) {
     const gltfData = await loader.loadAsync("./assets/" + name + ".gltf");
     return gltfData.scene;
 }
@@ -43287,7 +43302,7 @@ const { MeshBasicMaterial } = require("three");
 const { Raycaster } = require("three");
 const { modelPlacer } = require("./modelPlacer");
 const { initTurret, drawRange } = require("./turretInitializer");
-const { buyTurret } = require("./turretShop");
+const { buyTurret,sellTurret } = require("./turretShop");
 
 var placing = {
     object: undefined,
@@ -43324,66 +43339,85 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
         let intersections = raycaster.intersectObjects(hudScene.children);
         if (intersections.length) {
             let picked = intersections[0].object;
-            if (picked.userData.ref && buyTurret(picked.userData.ref)) {
-                raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
-                intersections = raycaster.intersectObjects(mainScene.children);
-                let groundIntersection = intersections.find(x => x.object.name == "Ground");
-                let position = [0, 0, 0];
-                if (groundIntersection) {
-                    position = [groundIntersection.point.x, 0, groundIntersection.point.z];
-                }
-                placing.object = await modelPlacer(mainScene, picked.userData.ref, position, [0, 0, 0], [0.01, 0.01, 0.01], picked.userData.ref);
-                drawRange(placing.object, mainScene);
-                let originalMaterials = [];
-                let n = 0;
-                placing.object.traverse(m => {
-                    m.name = placing.object.name + "_" + n++;
-                    if (m.material) {
-                        originalMaterials.push(m.material);
-                        m.material = greenMeshMaterial;
+            if (picked.userData.ref) {
+                if (picked.userData.ref != "Sell" && buyTurret(picked.userData.ref)) {
+                    raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
+                    intersections = raycaster.intersectObjects(mainScene.children);
+                    let groundIntersection = intersections.find(x => x.object.name == "Ground");
+                    let position = [0, 0, 0];
+                    if (groundIntersection) {
+                        position = [groundIntersection.point.x, 0, groundIntersection.point.z];
                     }
-                })
-                placing.originalMaterial = originalMaterials;
-                window.removeEventListener("click", hudClickHandler);
-                window.addEventListener("mousemove", objectTrackCursor);
-                window.addEventListener("click", placeObjectToCursor);
+                    placing.object = await modelPlacer(mainScene, picked.userData.ref, position, [0, 0, 0], [0.01, 0.01, 0.01], picked.userData.ref);
+                    drawRange(placing.object, mainScene);
+                    let originalMaterials = [];
+                    let n = 0;
+                    placing.object.traverse(m => {
+                        m.name = placing.object.name + "_" + n++;
+                        if (m.material) {
+                            originalMaterials.push(m.material);
+                            m.material = greenMeshMaterial;
+                        }
+                    })
+                    placing.originalMaterial = originalMaterials;
+                    window.removeEventListener("click", hudClickHandler);
+                    window.addEventListener("mousemove", objectTrackCursor);
+                    window.addEventListener("click", placeObjectToCursor);
+                }else if(picked.userData.ref == "Sell"){ 
+                    window.removeEventListener("click", hudClickHandler);
+                    window.addEventListener("click", placeObjectToCursor);
+                }
             }
         }
     }
 
     function placeObjectToCursor(event) {
-        raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
-        const intersections = raycaster.intersectObjects(mainScene.children);
+        if(placing.object != undefined){
+            raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
+            const intersections = raycaster.intersectObjects(mainScene.children);
+    
+            let groundIntersection = intersections.find(intersection => intersection.object.name == "Ground");
+            let forbiddenIntersection = intersections.find(intersection => intersection.object.name.includes("forbidden") ||
+                (!isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
+    
+            if (groundIntersection && !forbiddenIntersection && placing.object) {
+                placing.object.traverse((x) => {
+                    if (x.material) {
+                        x.material = placing.originalMaterial.shift();
+                    }
+                })
+                const turretReference = placing.object;
+                initTurret(turretReference, mainScene);
+                placing.object = undefined;
+                window.removeEventListener("click", placeObjectToCursor);
+                window.removeEventListener("mousemove", objectTrackCursor);
+                window.addEventListener("click", hudClickHandler);
+            }
+        }else{
+            raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
+            const intersections = raycaster.intersectObjects(mainScene.children);
 
-        let groundIntersection = intersections.find(intersection => intersection.object.name == "Ground");
-        let forbiddenIntersection = intersections.find(intersection => intersection.object.name.includes("forbidden") ||
-            (!isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
+            let turretObject = intersections.find(intersection => (intersection.object.name.toLocaleLowerCase().includes("turret")));
 
-        if (groundIntersection && !forbiddenIntersection && placing.object) {
-            placing.object.traverse((x) => {
-                if (x.material) {
-                    x.material = placing.originalMaterial.shift();
-                }
-            })
-            const turretReference = placing.object;
-            initTurret(turretReference, mainScene);
-            placing.object = undefined;
+            if(turretObject){
+                sellTurret(turretObject.object.parent.userData.type);
+                turretObject.object.parent.removeFromParent();
+            }
             window.removeEventListener("click", placeObjectToCursor);
-            window.removeEventListener("mousemove", objectTrackCursor);
             window.addEventListener("click", hudClickHandler);
         }
     }
 
     window.addEventListener("click", hudClickHandler);
 
-    function isChildOfPlacing(object){
-        if(object.id == placing.object.id){
+    function isChildOfPlacing(object) {
+        if (object.id == placing.object.id) {
             return true;
         }
-        else if(object.parent == null){
+        else if (object.parent == null) {
             return false;
         }
-        else{
+        else {
             return isChildOfPlacing(object.parent);
         }
     }
@@ -43395,7 +43429,7 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 
             let groundIntersection = intersections.find(x => x.object.name == "Ground")
             let forbiddenIntersection = intersections.find(intersection => intersection.object.name.includes("forbidden") ||
-                ( !isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
+                (!isChildOfPlacing(intersection.object) && intersection.object.name.toLocaleLowerCase().includes("turret")));
 
             if (groundIntersection) {
                 if (forbiddenIntersection && !placing.lastColorIsRed) {
@@ -43423,15 +43457,16 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 }
 
 module.exports = { pickingObject };
-},{"./modelPlacer":16,"./turretInitializer":21,"./turretShop":22,"three":6}],19:[function(require,module,exports){
+},{"./modelPlacer":16,"./turretInitializer":22,"./turretShop":23,"three":6}],19:[function(require,module,exports){
 const { lightTransforms } = require("./lightTransformation");
 const { PCFShadowMap, Mesh, PlaneGeometry, Vector3, TextureLoader, RepeatWrapping, MeshLambertMaterial, Scene, Color, WebGLRenderer } = require("three");
 const initializeCamera = require("./cameraInitializer");
 const { modelPlacer } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
 const { simulateLevels } = require("./levelBuilder");
-const {hudScreen} = require("./hudScreen");
-const { ClonableModels } = require("./ClonableModels")
+const { hudScreen } = require("./hudScreen");
+const { ClonableModels } = require("./ClonableModels");
+const { initHpBar } = require("./towerHp");
 
 let clonableModels;
 
@@ -43447,7 +43482,7 @@ async function loadScene(canvas = undefined) {
 	renderer.autoClear = false;
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
-	scene.background = new Color("#000000");
+	scene.background = new Color("#555555");
 
 	const textureLoader = new TextureLoader();
 
@@ -43462,6 +43497,7 @@ async function loadScene(canvas = undefined) {
 	ground.receiveShadow = true;
 	scene.add(ground);
 
+	initHpBar();
 	initPaths(scene);
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 
@@ -43469,7 +43505,7 @@ async function loadScene(canvas = undefined) {
 	base.userData.hp = 100;
 	base.name = "Base";
 
-	const gate = await modelPlacer(scene, "Gate", [-4,0,-2], [0,Math.PI/2,0], [0.01, 0.01, 0.01]);
+	const gate = await modelPlacer(scene, "Gate", [-4, 0, -2], [0, 90, 0], [0.01, 0.01, 0.01]);
 	gate.name = "Gate";
 
 	lightTransforms(scene);
@@ -43478,18 +43514,20 @@ async function loadScene(canvas = undefined) {
 	return [scene, renderer, camera, hudScene, hudCamera];
 }
 
-function getClonableModels(){
+function getClonableModels() {
 	return clonableModels.getModels();
 }
 
-module.exports = {loadScene, getClonableModels};
-},{"./ClonableModels":7,"./cameraInitializer":10,"./hudScreen":12,"./levelBuilder":13,"./lightTransformation":14,"./modelPlacer":16,"./pathInitializer":17,"three":6}],20:[function(require,module,exports){
+module.exports = { loadScene, getClonableModels };
+},{"./ClonableModels":7,"./cameraInitializer":10,"./hudScreen":12,"./levelBuilder":13,"./lightTransformation":14,"./modelPlacer":16,"./pathInitializer":17,"./towerHp":21,"three":6}],20:[function(require,module,exports){
+const { prcInterval } = require("precision-timeout-interval");
 const { Object3D } = require("three");
 const { BoxGeometry } = require("three");
 const { MeshBasicMaterial } = require("three");
 const { Mesh } = require("three");
 const { Vector2, Vector3 } = require("three");
 const { modelPlacer } = require("./modelPlacer");
+const { setHpBar } = require("./towerHp");
 
 const ONE_DEGREE = Math.PI / 180;
 const ENEMY_SPAWN_POS = [-4, 0, -2];
@@ -43506,16 +43544,18 @@ async function spawnEnemies(scene, type, count) {
         if (type == 0) {
             model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             model.name = "enemy_boy";
-            
+
+            model.userData.damage = 10;
             model.userData.maxHitPoint = 100;
             model.userData.currentHitPoint = model.userData.maxHitPoint;
             createHpBar(model, "green");
-            
+
             model.userData.speed = 0.009;
             model.userData.rotatedAlready = [];
             model.userData.update = updateEnemy.bind(null, model);
             model.userData.takeDamage = takeDamage.bind(null, model);
             model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
+            model.userData.deathBodyTime = 4000; //in miliseconds for prcInterval 
 
             scene.add(model);
         }
@@ -43540,15 +43580,27 @@ function createHpBar(enemy, color) {
  * @param {Number} damage 
  * @param {Object3D} obj
  */
-function takeDamage(obj, damage) {
+async function takeDamage(obj, damage) {
     if (obj.userData.currentHitPoint <= damage) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
+        let objPos = obj.position;
+        let scene = obj.parent;
         obj.userData.currentHitPoint = 0;
         obj.removeFromParent();
         decreaseRemainingMobs();
+
+        
+        let decoy = await modelPlacer(scene, "Boy", [objPos.x, objPos.y, objPos.z], [ 0, 0, 0], [0.01, 0.01, 0.01]);
+        decoy.rotateY(obj.userData.direction + 90 * ONE_DEGREE);
+        decoy.rotateX(90 * ONE_DEGREE);
+
+
+        prcInterval(obj.userData.deathBodyTime, () => {
+            decoy.removeFromParent();
+        })
     }
     else {
-        obj.userData.currentHitPoint -= damage
+        obj.userData.currentHitPoint -= damage;
         obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
     }
 }
@@ -43562,10 +43614,12 @@ function enemyCollisionHandler(enemy, colliding_with) {
         enemy.userData.direction -= 90;
         enemy.userData.rotatedAlready.push(colliding_with.uuid);
     }
-    else if( isChildOfBase(colliding_with) ){
+    else if (isChildOfBase(colliding_with)) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
         enemy.removeFromParent();
         decreaseRemainingMobs();
+        colliding_with.userData.hp -= enemy.userData.damage;
+        setHpBar(colliding_with.userData.hp);
     }
 }
 
@@ -43573,12 +43627,12 @@ function enemyCollisionHandler(enemy, colliding_with) {
  * 
  * @param {THREE.Object3D} obj 
  */
-function isChildOfBase(obj){
-    if(obj.name == "Base"){
+function isChildOfBase(obj) {
+    if (obj.name == "Base") {
         return true;
-    }else if( !obj.parent){
+    } else if (!obj.parent) {
         return false;
-    }else{
+    } else {
         return isChildOfBase(obj.parent);
     }
 }
@@ -43641,7 +43695,39 @@ function objectWalk(object, lerp = false, deltaTime) {
 }
 
 module.exports = { spawnEnemies, objectWalk, objectWalkTo };
-},{"./levelBuilder":13,"./modelPlacer":16,"three":6}],21:[function(require,module,exports){
+},{"./levelBuilder":13,"./modelPlacer":16,"./towerHp":21,"precision-timeout-interval":2,"three":6}],21:[function(require,module,exports){
+/** @type{HTMLDivElement} */let hpBar;
+/** @type{HTMLDivElement} */ let loseWinUi;
+function initHpBar(){
+    const ui = document.getElementById("ui");
+    const wrapper = document.createElement("div");
+    loseWinUi = document.getElementById("lose-win-ui");
+    wrapper.classList.add("hpbar-wrapper");
+    hpBar = document.createElement("div");
+    hpBar.classList.add("hpbar");
+    hpBar.style.width = "100%";
+
+    wrapper.appendChild(hpBar);
+    ui.appendChild(wrapper);
+}
+
+/**
+ * @param {Number} value 
+ */
+function setHpBar(value){
+    if(value > 0){
+        hpBar.style.width = value+"%";
+    }else{
+        hpBar.style.width = "0";
+        loseWinUi.innerText = "YOU LOST";
+        loseWinUi.classList.remove("hide");
+    }
+}
+
+module.exports = {
+    initHpBar, setHpBar
+}
+},{}],22:[function(require,module,exports){
 const { prcTimeout } = require("precision-timeout-interval");
 const { Vector3, LineBasicMaterial, BufferGeometry, Line, Box3} = require("three");
 
@@ -43771,8 +43857,9 @@ function reload(turret) {
 module.exports = {
     initTurret, drawRange
 }
-},{"precision-timeout-interval":2,"three":6}],22:[function(require,module,exports){
+},{"precision-timeout-interval":2,"three":6}],23:[function(require,module,exports){
 let coins = 50;
+const MAX_COIN = 99999;
 let coinBox = document.createElement("div");
 coinBox.classList.add("coin-box");
 coinBox.addEventListener("animationend", ()=> coinBox.classList.remove("animate-warn"));
@@ -43815,6 +43902,20 @@ function buyTurret(type){
 }
 
 /**
+ * @param {String} type 
+ */
+ function sellTurret(type){
+    if(coins < MAX_COIN){
+        spendCoins(-1 * prices[type]/2);
+        coinBox.classList.add("animate-warn");
+        return true;
+    }else{
+        coinBox.classList.add("animate-warn");
+    }
+    return false;
+}
+
+/**
  * @param {Number} x 
  */
  function updateCoinBox(){
@@ -43822,6 +43923,6 @@ function buyTurret(type){
 }
 
 module.exports = {
-    addCoins, buyTurret
+    addCoins, buyTurret, sellTurret
 }
 },{}]},{},[15]);

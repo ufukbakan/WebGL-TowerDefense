@@ -6,13 +6,13 @@ let infoBox = document.createElement("div");
 infoBox.classList.add("info-box");
 const ui = document.querySelector("#ui");
 ui.appendChild(infoBox);
+const loseWinUi = document.getElementById("lose-win-ui");
 
 let level = 0;
 let remainingMobs = 0;
 const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 ];
 var globalScene;
 
@@ -30,14 +30,19 @@ function simulateLevels(scene) {
  * @param {Number} count 
  */
 function countdownBeforeNextLevel(count) {
-    infoBox.innerHTML = getCountdownBox(count).outerHTML;
-    if (count > 1) {
-        prcTimeout(1000, ()=>countdownBeforeNextLevel(count - 1));
-        // ! set timeout ile laglı bir şekilde çalışıyor
-        //setTimeout(() => countdownBeforeNextLevel(count - 1), 1000);
+    if (!typesOfMobsForEachLevel[level]) {
+        loseWinUi.innerText = "YOU WON";
+        loseWinUi.classList.remove("hide");
     } else {
-        prcTimeout(1000, ()=>nextLevel());
-        //setTimeout(() => nextLevel(), 1000);
+        infoBox.innerHTML = getCountdownBox(count).outerHTML;
+        if (count > 1) {
+            prcTimeout(1000, () => countdownBeforeNextLevel(count - 1));
+            // ! set timeout ile laglı bir şekilde çalışıyor
+            //setTimeout(() => countdownBeforeNextLevel(count - 1), 1000);
+        } else {
+            prcTimeout(1000, () => nextLevel());
+            //setTimeout(() => nextLevel(), 1000);
+        }
     }
 }
 
@@ -68,7 +73,7 @@ function spawnLevelMobs(level, nSpawned) {
         // hepsi spawnlandı
     } else {
         spawnEnemies(globalScene, mobsOfLevel[nSpawned], 1);
-        prcTimeout(500, ()=> spawnLevelMobs(level, nSpawned+1));
+        prcTimeout(500, () => spawnLevelMobs(level, nSpawned + 1));
     }
 }
 
@@ -76,7 +81,7 @@ function decreaseRemainingMobs() {
     remainingMobs -= 1;
     updateLevelInfo();
     if (remainingMobs == 0) {
-        addCoins(level*50);
+        addCoins(level * 50);
         countdownBeforeNextLevel(10);
     }
 }
