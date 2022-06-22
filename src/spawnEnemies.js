@@ -1,3 +1,4 @@
+const { prcInterval } = require("precision-timeout-interval");
 const { Object3D } = require("three");
 const { BoxGeometry } = require("three");
 const { MeshBasicMaterial } = require("three");
@@ -20,16 +21,17 @@ async function spawnEnemies(scene, type, count) {
         if (type == 0) {
             model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             model.name = "enemy_boy";
-            
+
             model.userData.maxHitPoint = 100;
             model.userData.currentHitPoint = model.userData.maxHitPoint;
             createHpBar(model, "green");
-            
+
             model.userData.speed = 0.009;
             model.userData.rotatedAlready = [];
             model.userData.update = updateEnemy.bind(null, model);
             model.userData.takeDamage = takeDamage.bind(null, model);
             model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
+            model.userData.deathBodyTime = 4000; //in miliseconds for prcInterval 
 
             scene.add(model);
         }
@@ -54,15 +56,27 @@ function createHpBar(enemy, color) {
  * @param {Number} damage 
  * @param {Object3D} obj
  */
-function takeDamage(obj, damage) {
+async function takeDamage(obj, damage) {
     if (obj.userData.currentHitPoint <= damage) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
+        let objPos = obj.position;
+        let scene = obj.parent;
         obj.userData.currentHitPoint = 0;
         obj.removeFromParent();
         decreaseRemainingMobs();
+
+        
+        let decoy = await modelPlacer(scene, "Boy", [objPos.x, objPos.y, objPos.z], [ 0, 0, 0], [0.01, 0.01, 0.01]);
+        decoy.rotateY(obj.userData.direction + 90 * ONE_DEGREE);
+        decoy.rotateX(90 * ONE_DEGREE);
+
+
+        prcInterval(obj.userData.deathBodyTime, () => {
+            decoy.removeFromParent();
+        })
     }
     else {
-        obj.userData.currentHitPoint -= damage
+        obj.userData.currentHitPoint -= damage;
         obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
     }
 }
@@ -76,7 +90,7 @@ function enemyCollisionHandler(enemy, colliding_with) {
         enemy.userData.direction -= 90;
         enemy.userData.rotatedAlready.push(colliding_with.uuid);
     }
-    else if( isChildOfBase(colliding_with) ){
+    else if (isChildOfBase(colliding_with)) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
         enemy.removeFromParent();
         decreaseRemainingMobs();
@@ -87,12 +101,12 @@ function enemyCollisionHandler(enemy, colliding_with) {
  * 
  * @param {THREE.Object3D} obj 
  */
-function isChildOfBase(obj){
-    if(obj.name == "Base"){
+function isChildOfBase(obj) {
+    if (obj.name == "Base") {
         return true;
-    }else if( !obj.parent){
+    } else if (!obj.parent) {
         return false;
-    }else{
+    } else {
         return isChildOfBase(obj.parent);
     }
 }

@@ -4,7 +4,7 @@ const initializeCamera = require("./cameraInitializer");
 const { modelPlacer } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
 const { simulateLevels } = require("./levelBuilder");
-const {hudScreen} = require("./hudScreen");
+const { hudScreen } = require("./hudScreen");
 const { ClonableModels } = require("./ClonableModels")
 
 let clonableModels;
@@ -43,7 +43,7 @@ async function loadScene(canvas = undefined) {
 	base.userData.hp = 100;
 	base.name = "Base";
 
-	const gate = await modelPlacer(scene, "Gate", [-4,0,-2], [0,Math.PI/2,0], [0.01, 0.01, 0.01]);
+	const gate = await modelPlacer(scene, "Gate", [-4, 0, -2], [0, 90, 0], [0.01, 0.01, 0.01]);
 	gate.name = "Gate";
 
 	lightTransforms(scene);
@@ -52,8 +52,8 @@ async function loadScene(canvas = undefined) {
 	return [scene, renderer, camera, hudScene, hudCamera];
 }
 
-function getClonableModels(){
+function getClonableModels() {
 	return clonableModels.getModels();
 }
 
-module.exports = {loadScene, getClonableModels};
+module.exports = { loadScene, getClonableModels };

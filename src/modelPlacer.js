@@ -8,6 +8,8 @@ const draco = new DRACOLoader();
 draco.setDecoderPath("./libs/draco/");
 loader.dracoLoader = draco;
 Cache.enabled = true;
+const ONE_DEGREE = Math.PI / 180;
+
 
 /**
  * @param {THREE.Scene} scene 
@@ -18,15 +20,15 @@ Cache.enabled = true;
  * @param {String} objectName
  * @returns {THREE.Object3D}
  */
-async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName=undefined) {
+async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 1], objectName = undefined) {
     const { getClonableModels } = require("./sceneLoader");
     let model = getClonableModels()[modelName].clone();
     model.userData.type = modelName;
     model.position.set(pos[0], pos[1], pos[2]);
-    model.rotation.set(rot[0], rot[1], rot[2]);
+    model.rotation.set(rot[0] * ONE_DEGREE, rot[1] * ONE_DEGREE, rot[2] * ONE_DEGREE);
     model.userData.direction = model.rotation.y * Math.PI / 180;
     model.scale.set(sca[0], sca[1], sca[2]);
-    if(objectName)
+    if (objectName)
         model.name = objectName;
 
     scene.add(model);
@@ -38,7 +40,7 @@ async function modelPlacer(scene, modelName, pos, rot = [0, 0, 0], sca = [1, 1, 
 /**
  * @returns {THREE.Object3D}
  */
-async function modelLoader(name){
+async function modelLoader(name) {
     const gltfData = await loader.loadAsync("./assets/" + name + ".gltf");
     return gltfData.scene;
 }
