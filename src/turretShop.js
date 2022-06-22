@@ -1,4 +1,5 @@
 let coins = 50;
+const MAX_COIN = 99999;
 let coinBox = document.createElement("div");
 coinBox.classList.add("coin-box");
 coinBox.addEventListener("animationend", ()=> coinBox.classList.remove("animate-warn"));
@@ -41,6 +42,20 @@ function buyTurret(type){
 }
 
 /**
+ * @param {String} type 
+ */
+ function sellTurret(type){
+    if(coins < MAX_COIN){
+        spendCoins(-1 * prices[type]/2);
+        coinBox.classList.add("animate-warn");
+        return true;
+    }else{
+        coinBox.classList.add("animate-warn");
+    }
+    return false;
+}
+
+/**
  * @param {Number} x 
  */
  function updateCoinBox(){
@@ -48,5 +63,5 @@ function buyTurret(type){
 }
 
 module.exports = {
-    addCoins, buyTurret
+    addCoins, buyTurret, sellTurret
 }

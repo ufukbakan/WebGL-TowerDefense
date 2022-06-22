@@ -10,6 +10,11 @@ function fixLights(scene) {
             case "rotator":
                 break;
             case "forbidden":
+                obj.receiveShadow = true;
+                break;
+            case "healthBox":
+                obj.castShadow = false;
+                obj.receiveShadow= false;
                 break;
             default:
                 obj.castShadow = true;
@@ -26,7 +31,7 @@ function lightTransforms(scene) {
 
     fixLights(scene);
 
-    var light = new DirectionalLight("#fff");
+    var light = new DirectionalLight("#fff",2);
     light.position.y = 3;
     light.castShadow = true;
     light.target.position.set(0, 0, 0);

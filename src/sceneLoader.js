@@ -21,7 +21,7 @@ async function loadScene(canvas = undefined) {
 	renderer.autoClear = false;
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
-	scene.background = new Color("#000000");
+	scene.background = new Color("#555555");
 
 	const textureLoader = new TextureLoader();
 
