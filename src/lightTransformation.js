@@ -31,7 +31,7 @@ function lightTransforms(scene) {
 
     fixLights(scene);
 
-    var light = new DirectionalLight("#fff",2);
+    var light = new DirectionalLight("#fff");
     light.position.y = 3;
     light.castShadow = true;
     light.target.position.set(0, 0, 0);
@@ -40,8 +40,8 @@ function lightTransforms(scene) {
     scene.add(light);
     scene.add(light.target);
 
-    var helper = new CameraHelper(light.shadow.camera);
-    scene.add(helper);
+    // var helper = new CameraHelper(light.shadow.camera);
+    // scene.add(helper);
 
     window.addEventListener("keydown", (e) => {
         switch (e.code) {
