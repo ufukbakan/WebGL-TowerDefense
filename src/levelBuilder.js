@@ -12,6 +12,9 @@ let level = 0;
 let remainingMobs = 0;
 const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 ];
 var globalScene;
