@@ -12,6 +12,7 @@ var placing = {
 const redMeshMaterial = new MeshBasicMaterial({ color: 0xff0000, opacity: 0.75, transparent: true });
 const greenMeshMaterial = new MeshBasicMaterial({ color: 0x00ff00, opacity: 0.75, transparent: true });
 const raycaster = new Raycaster();
+var turretToSell = undefined;
 
 function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 
@@ -96,19 +97,30 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
         }else{
             raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
             const intersections = raycaster.intersectObjects(mainScene.children);
+            
+            checkTurretType(intersections.find(intersection => (intersection.object.name.toLocaleLowerCase().includes("turret"))).object);
 
-            let turretObject = intersections.find(intersection => (intersection.object.name.toLocaleLowerCase().includes("turret")));
-
-            if(turretObject){
-                sellTurret(turretObject.object.parent.userData.type);
-                turretObject.object.parent.removeFromParent();
+            if(turretToSell != undefined){
+                sellTurret(turretToSell.userData.type);
+                turretToSell.removeFromParent();
+                turretToSell = undefined;
             }
+
             window.removeEventListener("click", placeObjectToCursor);
             window.addEventListener("click", hudClickHandler);
         }
     }
 
     window.addEventListener("click", hudClickHandler);
+
+
+    function checkTurretType(turretPart){
+        if(turretPart.userData != undefined && turretPart.userData.type !=  undefined && turretPart.userData.type.toLocaleLowerCase().includes("turret")){
+            turretToSell = turretPart;
+        }else{
+            checkTurretType(turretPart.parent);
+        }
+    }
 
     function isChildOfPlacing(object) {
         if (object.id == placing.object.id) {
