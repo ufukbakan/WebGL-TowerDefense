@@ -1,5 +1,6 @@
 const { DirectionalLightHelper, CameraHelper, DirectionalLight } = require("three");
 
+var light;
 
 function fixLights(scene) {
     scene.traverse((obj) => {
@@ -14,7 +15,7 @@ function fixLights(scene) {
                 break;
             case "healthBox":
                 obj.castShadow = false;
-                obj.receiveShadow= false;
+                obj.receiveShadow = false;
                 break;
             default:
                 obj.castShadow = true;
@@ -31,7 +32,7 @@ function lightTransforms(scene) {
 
     fixLights(scene);
 
-    var light = new DirectionalLight("#fff");
+    light = new DirectionalLight("#fff");
     light.position.y = 3;
     light.castShadow = true;
     light.target.position.set(0, 0, 0);
@@ -75,7 +76,17 @@ function lightTransforms(scene) {
                     light.position.y -= step;
                 }
                 break;
+            case "KeyT":
+                if(light.intensity < 10){
+                    light.intensity += 0.25;
+                }
+                break;
+            case "KeyY":
+                if(light.intensity > 0 ){
+                    light.intensity -= 0.25;
+                }
+                break;
         }
     });
 }
-module.exports = {lightTransforms, fixLights};
+module.exports = { lightTransforms, fixLights };
