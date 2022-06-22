@@ -5,7 +5,8 @@ const { modelPlacer } = require("./modelPlacer");
 const initPaths = require("./pathInitializer");
 const { simulateLevels } = require("./levelBuilder");
 const { hudScreen } = require("./hudScreen");
-const { ClonableModels } = require("./ClonableModels")
+const { ClonableModels } = require("./ClonableModels");
+const { initHpBar } = require("./towerHp");
 
 let clonableModels;
 
@@ -36,6 +37,7 @@ async function loadScene(canvas = undefined) {
 	ground.receiveShadow = true;
 	scene.add(ground);
 
+	initHpBar();
 	initPaths(scene);
 	const [hudScene, hudCamera] = hudScreen(renderer, scene, camera);
 

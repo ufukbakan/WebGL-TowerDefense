@@ -5,6 +5,7 @@ const { MeshBasicMaterial } = require("three");
 const { Mesh } = require("three");
 const { Vector2, Vector3 } = require("three");
 const { modelPlacer } = require("./modelPlacer");
+const { setHpBar } = require("./towerHp");
 
 const ONE_DEGREE = Math.PI / 180;
 const ENEMY_SPAWN_POS = [-4, 0, -2];
@@ -22,6 +23,7 @@ async function spawnEnemies(scene, type, count) {
             model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.01, 0.01, 0.01]);
             model.name = "enemy_boy";
 
+            model.userData.damage = 10;
             model.userData.maxHitPoint = 100;
             model.userData.currentHitPoint = model.userData.maxHitPoint;
             createHpBar(model, "green");
@@ -94,6 +96,8 @@ function enemyCollisionHandler(enemy, colliding_with) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
         enemy.removeFromParent();
         decreaseRemainingMobs();
+        colliding_with.userData.hp -= enemy.userData.damage;
+        setHpBar(colliding_with.userData.hp);
     }
 }
 
