@@ -42974,6 +42974,9 @@ let level = 0;
 let remainingMobs = 0;
 const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 ];
 var globalScene;
@@ -43052,6 +43055,7 @@ module.exports = { simulateLevels, decreaseRemainingMobs };
 },{"./spawnEnemies":20,"./turretShop":23,"precision-timeout-interval":2}],14:[function(require,module,exports){
 const { DirectionalLightHelper, CameraHelper, DirectionalLight } = require("three");
 
+var light;
 
 function fixLights(scene) {
     scene.traverse((obj) => {
@@ -43066,7 +43070,7 @@ function fixLights(scene) {
                 break;
             case "healthBox":
                 obj.castShadow = false;
-                obj.receiveShadow= false;
+                obj.receiveShadow = false;
                 break;
             default:
                 obj.castShadow = true;
@@ -43083,7 +43087,7 @@ function lightTransforms(scene) {
 
     fixLights(scene);
 
-    var light = new DirectionalLight("#fff",2);
+    light = new DirectionalLight("#fff");
     light.position.y = 3;
     light.castShadow = true;
     light.target.position.set(0, 0, 0);
@@ -43092,8 +43096,8 @@ function lightTransforms(scene) {
     scene.add(light);
     scene.add(light.target);
 
-    var helper = new CameraHelper(light.shadow.camera);
-    scene.add(helper);
+    // var helper = new CameraHelper(light.shadow.camera);
+    // scene.add(helper);
 
     window.addEventListener("keydown", (e) => {
         switch (e.code) {
@@ -43127,10 +43131,20 @@ function lightTransforms(scene) {
                     light.position.y -= step;
                 }
                 break;
+            case "KeyT":
+                if(light.intensity < 10){
+                    light.intensity += 0.25;
+                }
+                break;
+            case "KeyY":
+                if(light.intensity > 0 ){
+                    light.intensity -= 0.25;
+                }
+                break;
         }
     });
 }
-module.exports = {lightTransforms, fixLights};
+module.exports = { lightTransforms, fixLights };
 },{"three":6}],15:[function(require,module,exports){
 const detectCollisions = require("./collisionDetector");
 const { loadScene } = require("./sceneLoader.js");
@@ -43312,6 +43326,7 @@ var placing = {
 const redMeshMaterial = new MeshBasicMaterial({ color: 0xff0000, opacity: 0.75, transparent: true });
 const greenMeshMaterial = new MeshBasicMaterial({ color: 0x00ff00, opacity: 0.75, transparent: true });
 const raycaster = new Raycaster();
+var turretToSell = undefined;
 
 function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
 
@@ -43396,19 +43411,30 @@ function pickingObject(renderer, mainScene, hudScene, mainCamera, hudCamera) {
         }else{
             raycaster.setFromCamera(getCanvasPosition(event), mainCamera);
             const intersections = raycaster.intersectObjects(mainScene.children);
+            
+            checkTurretType(intersections.find(intersection => (intersection.object.name.toLocaleLowerCase().includes("turret"))).object);
 
-            let turretObject = intersections.find(intersection => (intersection.object.name.toLocaleLowerCase().includes("turret")));
-
-            if(turretObject){
-                sellTurret(turretObject.object.parent.userData.type);
-                turretObject.object.parent.removeFromParent();
+            if(turretToSell != undefined){
+                sellTurret(turretToSell.userData.type);
+                turretToSell.removeFromParent();
+                turretToSell = undefined;
             }
+
             window.removeEventListener("click", placeObjectToCursor);
             window.addEventListener("click", hudClickHandler);
         }
     }
 
     window.addEventListener("click", hudClickHandler);
+
+
+    function checkTurretType(turretPart){
+        if(turretPart.userData != undefined && turretPart.userData.type !=  undefined && turretPart.userData.type.toLocaleLowerCase().includes("turret")){
+            turretToSell = turretPart;
+        }else{
+            checkTurretType(turretPart.parent);
+        }
+    }
 
     function isChildOfPlacing(object) {
         if (object.id == placing.object.id) {
@@ -43559,6 +43585,24 @@ async function spawnEnemies(scene, type, count) {
 
             scene.add(model);
         }
+        else if (type == 1) {
+            model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.1, 0.1, 0.1]);
+            model.name = "enemy_big_boy";
+
+            model.userData.damage = 20;
+            model.userData.maxHitPoint = 500;
+            model.userData.currentHitPoint = model.userData.maxHitPoint;
+            createHpBar(model, "green");
+
+            model.userData.speed = 0.003;
+            model.userData.rotatedAlready = [];
+            model.userData.update = updateEnemy.bind(null, model);
+            model.userData.takeDamage = takeDamage.bind(null, model);
+            model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
+            model.userData.deathBodyTime = 2000; //in miliseconds for prcInterval 
+
+            scene.add(model);
+        }
         setTimeout(() => spawnEnemies(scene, type, count - 1), 500);
     }
 }
@@ -43581,27 +43625,18 @@ function createHpBar(enemy, color) {
  * @param {Object3D} obj
  */
 async function takeDamage(obj, damage) {
-    if (obj.userData.currentHitPoint <= damage) {
+    obj.userData.currentHitPoint = Math.max(obj.userData.currentHitPoint - damage, 0);
+    obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
+    if (obj.userData.currentHitPoint <= 0) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
-        let objPos = obj.position;
-        let scene = obj.parent;
         obj.userData.currentHitPoint = 0;
-        obj.removeFromParent();
+        obj.userData.update = undefined;
+        obj.rotateX(90 * ONE_DEGREE);
         decreaseRemainingMobs();
 
-        
-        let decoy = await modelPlacer(scene, "Boy", [objPos.x, objPos.y, objPos.z], [ 0, 0, 0], [0.01, 0.01, 0.01]);
-        decoy.rotateY(obj.userData.direction + 90 * ONE_DEGREE);
-        decoy.rotateX(90 * ONE_DEGREE);
-
-
         prcInterval(obj.userData.deathBodyTime, () => {
-            decoy.removeFromParent();
+            obj.removeFromParent();
         })
-    }
-    else {
-        obj.userData.currentHitPoint -= damage;
-        obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
     }
 }
 
@@ -43809,7 +43844,7 @@ function turretLifeCycle(turret, scene) {
                     let enemyShootable = false;
                     //(x - xmerkez)^2 + (y - ymerkez)^2 <= kulenin görüş yarı çapı^2 ise ateş et (y yerine z ekseni)
                     const enemyDistanceSqr = Math.pow((obj.position.x - turret.position.x), 2) + Math.pow((obj.position.z - turret.position.z), 2);
-                    if (enemyDistanceSqr <= turret.userData.range) {
+                    if (obj.userData.currentHitPoint > 0 && enemyDistanceSqr <= turret.userData.range) {
                         enemyShootable = true;
                     }
                     if (enemyShootable) {

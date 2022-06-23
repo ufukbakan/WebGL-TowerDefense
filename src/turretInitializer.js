@@ -79,7 +79,7 @@ function turretLifeCycle(turret, scene) {
                     let enemyShootable = false;
                     //(x - xmerkez)^2 + (y - ymerkez)^2 <= kulenin görüş yarı çapı^2 ise ateş et (y yerine z ekseni)
                     const enemyDistanceSqr = Math.pow((obj.position.x - turret.position.x), 2) + Math.pow((obj.position.z - turret.position.z), 2);
-                    if (enemyDistanceSqr <= turret.userData.range) {
+                    if (obj.userData.currentHitPoint > 0 && enemyDistanceSqr <= turret.userData.range) {
                         enemyShootable = true;
                     }
                     if (enemyShootable) {

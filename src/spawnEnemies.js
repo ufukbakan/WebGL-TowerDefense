@@ -37,6 +37,24 @@ async function spawnEnemies(scene, type, count) {
 
             scene.add(model);
         }
+        else if (type == 1) {
+            model = await modelPlacer(scene, "Boy", ENEMY_SPAWN_POS, [0, 0, 0], [0.1, 0.1, 0.1]);
+            model.name = "enemy_big_boy";
+
+            model.userData.damage = 20;
+            model.userData.maxHitPoint = 500;
+            model.userData.currentHitPoint = model.userData.maxHitPoint;
+            createHpBar(model, "green");
+
+            model.userData.speed = 0.003;
+            model.userData.rotatedAlready = [];
+            model.userData.update = updateEnemy.bind(null, model);
+            model.userData.takeDamage = takeDamage.bind(null, model);
+            model.userData.collisionHandler = enemyCollisionHandler.bind(null, model);
+            model.userData.deathBodyTime = 2000; //in miliseconds for prcInterval 
+
+            scene.add(model);
+        }
         setTimeout(() => spawnEnemies(scene, type, count - 1), 500);
     }
 }
@@ -59,27 +77,18 @@ function createHpBar(enemy, color) {
  * @param {Object3D} obj
  */
 async function takeDamage(obj, damage) {
-    if (obj.userData.currentHitPoint <= damage) {
+    obj.userData.currentHitPoint = Math.max(obj.userData.currentHitPoint - damage, 0);
+    obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
+    if (obj.userData.currentHitPoint <= 0) {
         const { decreaseRemainingMobs } = require("./levelBuilder");
-        let objPos = obj.position;
-        let scene = obj.parent;
         obj.userData.currentHitPoint = 0;
-        obj.removeFromParent();
+        obj.userData.update = undefined;
+        obj.rotateX(90 * ONE_DEGREE);
         decreaseRemainingMobs();
 
-        
-        let decoy = await modelPlacer(scene, "Boy", [objPos.x, objPos.y, objPos.z], [ 0, 0, 0], [0.01, 0.01, 0.01]);
-        decoy.rotateY(obj.userData.direction + 90 * ONE_DEGREE);
-        decoy.rotateX(90 * ONE_DEGREE);
-
-
         prcInterval(obj.userData.deathBodyTime, () => {
-            decoy.removeFromParent();
+            obj.removeFromParent();
         })
-    }
-    else {
-        obj.userData.currentHitPoint -= damage;
-        obj.getObjectByName("healthBox").scale.set(15 * (obj.userData.currentHitPoint / obj.userData.maxHitPoint), 2, 2);
     }
 }
 
