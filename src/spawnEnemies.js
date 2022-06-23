@@ -84,6 +84,7 @@ async function takeDamage(obj, damage) {
         obj.userData.currentHitPoint = 0;
         obj.userData.update = undefined;
         obj.rotateX(90 * ONE_DEGREE);
+        obj.getObjectByName("healthBox").removeFromParent();
         decreaseRemainingMobs();
 
         prcInterval(obj.userData.deathBodyTime, () => {

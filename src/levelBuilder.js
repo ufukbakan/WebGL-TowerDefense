@@ -14,7 +14,9 @@ const typesOfMobsForEachLevel = [
     [0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
 
 ];
 var globalScene;
@@ -84,7 +86,7 @@ function decreaseRemainingMobs() {
     remainingMobs -= 1;
     updateLevelInfo();
     if (remainingMobs == 0) {
-        addCoins(level * 50);
+        addCoins(Math.min(level * 50, 100) );
         countdownBeforeNextLevel(10);
     }
 }

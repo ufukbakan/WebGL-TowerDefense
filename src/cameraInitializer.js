@@ -14,7 +14,7 @@ function initializeCamera() {
 
     let cameraFocusPoint = new Vector3(0, 0, 0);
     let defaultZoomRadius = 4.5;
-    let cameraPositionVector = new Vector3(defaultZoomRadius, ONE_DEGREE * 50, 0);
+    let cameraPositionVector = new Vector3(defaultZoomRadius, ONE_DEGREE * 20, 0);
 
     updateCamera();
 
