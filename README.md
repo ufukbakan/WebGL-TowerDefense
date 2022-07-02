@@ -1,5 +1,7 @@
 # WebGL TowerDefense
 
+Live deployment: https://ufukbakan.github.io/WebGL-TowerDefense/public/
+
 - Only production:
 ```bash
 $ npm install
